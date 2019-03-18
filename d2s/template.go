@@ -16,6 +16,7 @@ var tpl = template.Must( // nolint: gochecknoglobals
 package {{ .Package }}
 
 {{- if or .IsImportNil .IsImportTime }}
+
 import (
 {{- if .IsImportTime }}
 	"time"
@@ -24,8 +25,7 @@ import (
 {{- if .IsImportTime }}
 {{ end }}
 	nul "gopkg.in/webnice/lin.v1/nl"{{ end }}
-)
-{{ end -}}
+){{ end -}}
 {{- $cf := .ColumnsFormat }}
 
 // {{ .Struct }} {{ .Comment }}
