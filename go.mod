@@ -10,6 +10,5 @@ require (
 	github.com/stretchr/testify v1.3.0 // indirect
 	google.golang.org/appengine v1.4.0 // indirect
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
-	gopkg.in/webnice/debug.v1 v1.0.0
 	gopkg.in/webnice/log.v2 v2.0.0-20180614164658-0d0f83550387
 )

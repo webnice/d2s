@@ -20,7 +20,5 @@ google.golang.org/appengine v1.4.0 h1:/wp5JvzpHIxhs/dumFmF7BXTf3Z+dd4uXta4kVyO50
 google.golang.org/appengine v1.4.0/go.mod h1:xpcJRLb0r/rnEns0DIKYYv+WjYCduHsrkT7/EB5XEv4=
 gopkg.in/alecthomas/kingpin.v2 v2.2.6 h1:jMFz6MfLP0/4fUyZle81rXUoxOBFi19VUFKVDOQfozc=
 gopkg.in/alecthomas/kingpin.v2 v2.2.6/go.mod h1:FMv+mEhP44yOT+4EoQTLFTRgOQ1FBLkstjWtayDeSgw=
-gopkg.in/webnice/debug.v1 v1.0.0 h1:vslbCq7qIWgCwW2Ryxfefb5NuM3dwY1zuRx2a220U2s=
-gopkg.in/webnice/debug.v1 v1.0.0/go.mod h1:YJnufE3IA7M5YQblj2k23QNBBYmtrw9o5XE48VS9CHU=
 gopkg.in/webnice/log.v2 v2.0.0-20180614164658-0d0f83550387 h1:URVgyGDsgoxk3FlWQKgQXSKFn5bPvCp1SK7HWZ5MRpg=
 gopkg.in/webnice/log.v2 v2.0.0-20180614164658-0d0f83550387/go.mod h1:TI0RVz7HToFw3AOoOYKnLiwbpvDMbvZCpxVzUXmVst0=

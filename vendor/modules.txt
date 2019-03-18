@@ -9,8 +9,6 @@ github.com/go-sql-driver/mysql
 google.golang.org/appengine/cloudsql
 # gopkg.in/alecthomas/kingpin.v2 v2.2.6
 gopkg.in/alecthomas/kingpin.v2
-# gopkg.in/webnice/debug.v1 v1.0.0
-gopkg.in/webnice/debug.v1
 # gopkg.in/webnice/log.v2 v2.0.0-20180614164658-0d0f83550387
 gopkg.in/webnice/log.v2
 gopkg.in/webnice/log.v2/level
