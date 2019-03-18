@@ -48,7 +48,12 @@ func (d2s *impl) Dialect(sqlDialect string) (err error) {
 func (d2s *impl) Connect(db *sql.DB) Interface { d2s.db = db; return d2s }
 
 // Create structure from table
-func (d2s *impl) Create(databaseName string, tableName string, packageName string, structureName string, fileName string) (err error) {
+func (d2s *impl) Create(
+	databaseName string,
+	tableName string,
+	packageName string,
+	structureName string,
+	fileName string) (err error) {
 	var inf *d2sTypes.TableInfo
 	var buf *bytes.Buffer
 	var fh *os.File

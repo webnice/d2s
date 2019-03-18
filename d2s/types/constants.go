@@ -58,12 +58,12 @@ var (
 		'5': "Five", '6': "Six", '7': "Seven", '8': "Eight", '9': "Nine",
 	}
 	typesMap = map[string]*GoType{ // nolint: gochecknoglobals
-		TBool:    &GoType{false: "bool", true: "nul.Bool"},
-		TBytes:   &GoType{false: "[]byte", true: "nul.Bytes"},
-		TFloat64: &GoType{false: "float64", true: "nul.Float64"},
-		TInt64:   &GoType{false: "int64", true: "nul.Int64"},
-		TString:  &GoType{false: "string", true: "nul.String"},
-		TTime:    &GoType{false: "time.Time", true: "nul.Time"},
-		TUint64:  &GoType{false: "uint64", true: "nul.Uint64"},
+		TBool:    {false: "bool", true: "nul.Bool"},
+		TBytes:   {false: "[]byte", true: "nul.Bytes"},
+		TFloat64: {false: "float64", true: "nul.Float64"},
+		TInt64:   {false: "int64", true: "nul.Int64"},
+		TString:  {false: "string", true: "nul.String"},
+		TTime:    {false: "time.Time", true: "nul.Time"},
+		TUint64:  {false: "uint64", true: "nul.Uint64"},
 	}
 )
