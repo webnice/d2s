@@ -53,10 +53,13 @@ var (
 		"RAM", "RHS", "RPC", "SLA", "SMTP", "SSH", "TLS", "TTL", "UI",
 		"UID", "UUID", "URI", "URL", "UTF8", "VM", "XML",
 	}
+
+	// NumberToWordMap Map for conversion first symbol of a structure fields from number to word
 	NumberToWordMap = map[rune]string{ // nolint: gochecknoglobals
 		'0': "Nil", '1': "One", '2': "Two", '3': "Three", '4': "Four",
 		'5': "Five", '6': "Six", '7': "Seven", '8': "Eight", '9': "Nine",
 	}
+
 	typesMap = map[string]*GoType{ // nolint: gochecknoglobals
 		TBool:    {false: "bool", true: "nul.Bool"},
 		TBytes:   {false: "[]byte", true: "nul.Bytes"},
