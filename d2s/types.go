@@ -2,7 +2,11 @@ package d2s // import "gopkg.in/webnice/d2s.v1/d2s"
 
 //import "gopkg.in/webnice/debug.v1"
 //import "gopkg.in/webnice/log.v2"
-//import ()
+import (
+	"database/sql"
+
+	d2sTypes "gopkg.in/webnice/d2s.v1/d2s/types"
+)
 
 // Interface is an interface of package
 type Interface interface {
@@ -12,34 +16,16 @@ type Interface interface {
 	// Dialect sets the SQL dialect
 	Dialect(sqlDialect string) error
 
-	// Run runs a command
-	Run(command string, tableName string, structureName string, fileName string) error
+	// Connect Соединение с базой данных для получения информации
+	Connect(db *sql.DB) Interface
+
+	// Create structure from table
+	Create(databaseName string, tableName string, packageName string, structureName string, fileName string) error
 }
 
 // impl is an implementation of package
 type impl struct {
-	debug   bool
-	dialect SQLDialect
-}
-
-// Sqlite3Dialect struct
-type Sqlite3Dialect struct{}
-
-// MySQLDialect struct
-type MySQLDialect struct{}
-
-// ClickHouseDialect struct
-type ClickHouseDialect struct{}
-
-// RedshiftDialect struct
-type RedshiftDialect struct{}
-
-// TiDBDialect struct
-type TiDBDialect struct{}
-
-// PostgresDialect struct
-type PostgresDialect struct{}
-
-// SQLDialect abstracts the details of specific SQL dialects
-type SQLDialect interface {
+	debug   bool             // =true - Режим отладки
+	dialect d2sTypes.Dialect // Диалект базы данных
+	db      *sql.DB          // Объект соединения с базой данных
 }

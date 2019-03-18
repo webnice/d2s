@@ -7,7 +7,9 @@ type Args struct {
 	Debug     bool               // Debug flag
 	Driver    string             // Driver of database
 	Dsn       string             // Database source name (DSN)
-	Table     string             // Database and table name
+	Database  string             // Database name
+	Table     string             // Table name
+	Package   string             // Package name
 	Structure string             // Structure name
 	File      string             // Name of file for create golang structure
 	Create    *kingpin.CmdClause // Creates new migration file with next version

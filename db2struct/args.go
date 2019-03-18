@@ -30,8 +30,12 @@ Overrides the default value for a flag from an environment variable by name 'DB2
 
 	// Commands with args
 	args.Create = kingpin.Command(`create`, `Create a structure file`)
-	args.Create.Arg(`table`, `Database name and table name through point.`).
+	args.Create.Arg(`database`, `Database name. If not specified, determined from DSN string or connection.`).
+		StringVar(&args.Database)
+	args.Create.Arg(`table`, `Table name.`).
 		StringVar(&args.Table)
+	args.Create.Arg(`package`, `Name of package.`).
+		StringVar(&args.Package)
 	args.Create.Arg(`struct`, `Name of created structure.`).
 		StringVar(&args.Structure)
 	args.Create.Arg(`file`, `The name of the file being created with the table structure.`).
