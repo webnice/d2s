@@ -11,16 +11,15 @@ import (
 	log "github.com/webnice/lv2"
 )
 
-// Dialect Return SQL dialect
+// Dialect Return SQL dialect.
 func Dialect() Interface {
 	var msl = new(impl)
 	return msl
 }
 
-// TableInfo Получение информации о структуре таблицы
+// TableInfo Получение информации о структуре таблицы.
 func (msl *impl) TableInfo(db *sql.DB, databaseName string, tableName string) (ret *d2sTypes.TableInfo, err error) {
-
-	// Структура ответа
+	// Структура ответа.
 	ret = &d2sTypes.TableInfo{
 		Database: databaseName,
 		Table:    tableName,
@@ -30,11 +29,11 @@ func (msl *impl) TableInfo(db *sql.DB, databaseName string, tableName string) (r
 			return
 		}
 	}
-	// Загрузка комментариев к таблице
+	// Загрузка комментариев к таблице.
 	if err = msl.TableComment(db, ret); err != nil {
 		return
 	}
-	// Загрузка колонок таблицы
+	// Загрузка колонок таблицы.
 	if err = msl.tableColumns(db, ret); err != nil {
 		return
 	}
@@ -42,7 +41,7 @@ func (msl *impl) TableInfo(db *sql.DB, databaseName string, tableName string) (r
 	return
 }
 
-// DatabaseCurrent Получение имени текущей базы данных выбранной через DSN
+// DatabaseCurrent Получение имени текущей базы данных выбранной через DSN.
 func (msl *impl) DatabaseCurrent(db *sql.DB) (ret string, err error) {
 	const dbQuery = `SELECT DATABASE()`
 	var rows *sql.Rows
@@ -70,7 +69,7 @@ func (msl *impl) DatabaseCurrent(db *sql.DB) (ret string, err error) {
 	return
 }
 
-// TableComment Загрузка комментариев к таблице
+// TableComment Загрузка комментариев к таблице.
 func (msl *impl) TableComment(db *sql.DB, inf *d2sTypes.TableInfo) (err error) {
 	const dbQuery = "SELECT TABLE_COMMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?"
 	var rows *sql.Rows
@@ -94,7 +93,7 @@ func (msl *impl) TableComment(db *sql.DB, inf *d2sTypes.TableInfo) (err error) {
 	return
 }
 
-// Загрузка колонок таблицы
+// Загрузка колонок таблицы.
 func (msl *impl) tableColumns(db *sql.DB, inf *d2sTypes.TableInfo) (err error) {
 	const (
 		dbQuery = "SELECT COLUMN_NAME, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, COLUMN_TYPE, COLUMN_KEY" +
@@ -107,9 +106,11 @@ func (msl *impl) tableColumns(db *sql.DB, inf *d2sTypes.TableInfo) (err error) {
 		keyPrimary       = `pri`
 		keyAutoIncrement = `auto_increment`
 	)
-	var rows *sql.Rows
-	var row *d2sTypes.ColumnInfo
-	var isNullable, isPrimary, isAutoIncrement string
+	var (
+		rows                                   *sql.Rows
+		row                                    *d2sTypes.ColumnInfo
+		isNullable, isPrimary, isAutoIncrement string
+	)
 
 	if rows, err = db.Query(dbQuery, inf.Database, inf.Table); err != nil {
 		err = fmt.Errorf("query database error: %s", err)
@@ -132,27 +133,27 @@ func (msl *impl) tableColumns(db *sql.DB, inf *d2sTypes.TableInfo) (err error) {
 			&isAutoIncrement,
 			&row.Comment,
 			&row.Size,
-			&row.Precission,
+			&row.Precision,
 			&row.Scale,
 		)
-		// NULLABLE
+		// NULLABLE.
 		isNullable = strings.TrimSpace(strings.ToLower(isNullable))
 		if isNullable == boolTrue1 || isNullable == boolTrue2 {
 			row.IsNullable = true
 		}
-		// Полный тип и UNSIGNED расширение типа
+		// Полный тип и UNSIGNED расширение типа.
 		msl.tableColumnsFullTypeParse(row)
-		// Первичный ключ
+		// Первичный ключ.
 		isPrimary = strings.TrimSpace(strings.ToLower(isPrimary))
 		row.IsPrimary = isPrimary == keyPrimary
-		// Автоинкремент
+		// Авто инкремент.
 		row.IsAutoIncrement = strings.Contains(strings.ToLower(isAutoIncrement), keyAutoIncrement)
 		// Если что-то пошло не так
 		if err != nil {
 			err = fmt.Errorf("scan error: %s", err)
 			return
 		}
-		// Конвертация типа в тип Golang
+		// Конвертация типа в тип Golang.
 		if err = msl.columnTypeMapping(row); err != nil {
 			err = fmt.Errorf("database type conversion to golang type error: %s", err)
 		}
@@ -173,7 +174,7 @@ func (msl *impl) tableColumnsFullTypeParse(col *d2sTypes.ColumnInfo) {
 	col.TypeFull = strings.ToUpper(col.TypeFull)
 }
 
-// Сопоставление типов данных в БД с типом данных в golang
+// Сопоставление типов данных в БД с типом данных в golang.
 func (msl *impl) columnTypeMapping(col *d2sTypes.ColumnInfo) (err error) {
 	switch strings.ToLower(col.TypeSimple) {
 	case dbBoolean, dbBool, dbTinyint:

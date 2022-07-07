@@ -9,12 +9,12 @@ import (
 
 	log "github.com/webnice/lv2"
 
-	// Init database drivers
-	_ "github.com/go-sql-driver/mysql" // Mysql
-	//_ "github.com/mattn/go-sqlite3"     // Sqlite
-	//_ "github.com/kshvakov/clickhouse"  // Clickhouse
-	//_ "github.com/lib/pq"               // Postgres, Cockroach, Redshift
-	//_ "github.com/ziutek/mymysql/godrv" // App Engine CloudSQL
+	// Драйвера базы данных.
+	_ "github.com/go-sql-driver/mysql" // Mysql.
+	//_ "github.com/mattn/go-sqlite3"     // Sqlite.
+	//_ "github.com/kshvakov/clickhouse"  // Clickhouse.
+	//_ "github.com/lib/pq"               // Postgres, Cockroach, Redshift.
+	//_ "github.com/ziutek/mymysql/godrv" // App Engine CloudSQL.
 )
 
 func main() {
@@ -27,11 +27,11 @@ func main() {
 		db        *sql.DB
 	)
 
-	// Логирование
+	// Логирование.
 	log.Gist().StandardLogSet()
 	defer log.Done()
 	defer log.Gist().StandardLogUnset()
-	// Checking driver and set dialect
+	// Checking driver and set dialect.
 	db2struct = d2s.New()
 	switch cmd, arg = args(); arg.Driver {
 	case d2sTypes.DrvMysql, d2sTypes.DrvPostgres, d2sTypes.DrvSqlite3, d2sTypes.DrvClickhouse:
@@ -48,7 +48,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	// Opening database connection
+	// Opening database connection.
 	if db, err = sql.Open(arg.Driver, arg.Dsn); err != nil {
 		log.Fatalf("connect to database error: %s", err)
 	}
@@ -58,12 +58,12 @@ func main() {
 		}
 	}()
 	db.SetConnMaxLifetime(0)
-	// Check correct value
+	// Check correct value.
 	if arg.Table == "" || arg.Package == "" || arg.Structure == "" || arg.File == "" {
 		argUsage()
 		return
 	}
-	// Running command of database migration with different arguments
+	// Running command of database migration with different arguments.
 	switch cmd {
 	case cmdCreate:
 		err = db2struct.

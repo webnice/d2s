@@ -121,8 +121,8 @@ func (d2s *impl) GeneratorTags(col *d2sTypes.ColumnInfo, max int) (ret string) {
 	// PRECISION and SCALE
 	switch col.TypeGolang.Simple {
 	case d2sTypes.TFloat64, d2sTypes.TInt64, d2sTypes.TUint64:
-		if col.Precission != nil && *col.Precission > 0 {
-			_, _ = fmt.Fprintf(buf, "precision:%d;", *col.Precission)
+		if col.Precision != nil && *col.Precision > 0 {
+			_, _ = fmt.Fprintf(buf, "precision:%d;", *col.Precision)
 		}
 		if col.Scale != nil && *col.Scale > 0 {
 			_, _ = fmt.Fprintf(buf, "scale:%d;", *col.Scale)

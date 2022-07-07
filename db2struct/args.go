@@ -1,14 +1,12 @@
 package main
 
-import (
-	"gopkg.in/alecthomas/kingpin.v2"
-)
+import "gopkg.in/alecthomas/kingpin.v2"
 
 func args() (cmd string, args *Args) {
 	args = new(Args)
 	kingpin.CommandLine.Help = `The utility creates a golang structure from information about a database table`
 
-	// Global flags
+	// Global flags.
 	kingpin.Flag(`debug`, `Sets debug mode.
 Overrides the default value for a flag from an environment variable by name 'DB2STRUCT_DEBUG'`).
 		Envar("DB2STRUCT_DEBUG").
@@ -28,7 +26,7 @@ Overrides the default value for a flag from an environment variable by name 'DB2
 		Short('u').
 		StringVar(&args.Dsn)
 
-	// Commands with args
+	// Commands with args.
 	args.Create = kingpin.Command(`create`, `Creating a structure with the specified name according to data 
 from the database and writing the result to the specified file.`)
 	args.Create.Arg(`database`, `Database name. If not specified, determined from DSN string or connection.`).

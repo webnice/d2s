@@ -6,17 +6,19 @@ import (
 	"unicode"
 )
 
-// ColumnName Тип названия колонки
+// ColumnName Тип названия колонки.
 type ColumnName string
 
-// CamelCase Преобразование имени колонки в верблюжью нотацию и совместимый с golang формат
+// CamelCase Преобразование имени колонки в верблюжью нотацию и совместимый с golang формат.
 func (cn *ColumnName) CamelCase() (ret string) {
 	const underscore = '_'
-	var name string
-	var runes []rune
-	var c rune
-	var i int
-	var ok bool
+	var (
+		name  string
+		runes []rune
+		c     rune
+		i     int
+		ok    bool
+	)
 
 	name = cn.lint()
 	runes = []rune(name)
@@ -36,12 +38,14 @@ func (cn *ColumnName) CamelCase() (ret string) {
 
 func (cn *ColumnName) lint() (ret string) {
 	const underscore = '_'
-	var name, word, u string
-	var allLower, eow bool
-	var runes []rune
-	var r rune
-	var i, w, n int
-	var ok bool
+	var (
+		name, word, u string
+		allLower, eow bool
+		runes         []rune
+		r             rune
+		i, w, n       int
+		ok            bool
+	)
 
 	if name = string(*cn); name == string(underscore) {
 		ret = name
