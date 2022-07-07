@@ -1,11 +1,10 @@
-package d2s // import "gopkg.in/webnice/d2s.v1/d2s"
+// Package d2s
+package d2s
 
-//import "gopkg.in/webnice/debug.v1"
-//import "gopkg.in/webnice/log.v2"
 import (
 	"database/sql"
 
-	d2sTypes "gopkg.in/webnice/d2s.v1/d2s/types"
+	d2sTypes "github.com/webnice/d2s/types"
 )
 
 // Interface is an interface of package

@@ -8,24 +8,20 @@ BENCHPACKETS=$(shell if [ -f .benchpackages ]; then cat .benchpackages; fi)
 
 default: lint test
 
-link:
-	@mkdir -p ${DIR}/src/gopkg.in/webnice; cd ${DIR}/src/gopkg.in/webnice && ln -s ../../.. d2s.v1 2>/dev/null; true
-	@if [ ! -L ${DIR}/src/vendor ]; then ln -s ${DIR}/vendor ${DIR}/src/vendor 2>/dev/null; fi
-.PHONY: link
-
 ## Generate code by go generate or other utilities
-generate: link
+generate:
 .PHONY: generate
 
 ## Dependence managers
-dep: link
+dep:
+	@go clean -cache -modcache
+	@go get -u ./...
 	@go mod download
-	@go get -u
 	@go mod tidy
 	@go mod vendor
 .PHONY: dep
 
-test: link
+test:
 	@echo "mode: set" > $(DIR)/coverage.log
 	@for PACKET in $(TESTPACKETS); do \
 		touch $(DIR)/coverage-tmp.log; \
@@ -40,11 +36,11 @@ cover: test
 	@GOPATH=${GOPATH} go tool cover -html=$(DIR)/coverage.log
 .PHONY: cover
 
-bench: link
+bench:
 	@for PACKET in $(BENCHPACKETS); do GOPATH=${GOPATH} go test -race -bench=. -benchmem $$PACKET; done
 .PHONY: bench
 
-lint: link
+lint:
 	@golangci-lint \
 	run \
 	--enable-all \

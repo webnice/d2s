@@ -1,8 +1,5 @@
-package mysql // import "gopkg.in/webnice/d2s.v1/d2s/mysql"
-
-//import "gopkg.in/webnice/debug.v1"
-//import "gopkg.in/webnice/log.v2"
-//import ()
+// Package mysql
+package mysql
 
 const (
 	dbBoolean    = "boolean"

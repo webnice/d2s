@@ -1,13 +1,14 @@
-package mysql // import "gopkg.in/webnice/d2s.v1/d2s/mysql"
+// Package mysql
+package mysql
 
-//import "gopkg.in/webnice/debug.v1"
-import "gopkg.in/webnice/log.v2"
 import (
 	"database/sql"
 	"fmt"
 	"strings"
 
-	d2sTypes "gopkg.in/webnice/d2s.v1/d2s/types"
+	d2sTypes "github.com/webnice/d2s/types"
+
+	log "github.com/webnice/lv2"
 )
 
 // Dialect Return SQL dialect

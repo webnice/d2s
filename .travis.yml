@@ -2,10 +2,7 @@ language: go
 
 install:
   - go get github.com/mattn/goveralls
-  - go get gopkg.in/webnice/debug.v1
-  - go get gopkg.in/webnice/log.v2
-  - go get gopkg.in/webnice/transport.v2
-  - go get gopkg.in/webnice/d2s.v1/d2s
+  - go get github.com/webnice/d2s
 
 script:
   - make test

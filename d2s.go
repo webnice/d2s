@@ -1,15 +1,14 @@
-package d2s // import "gopkg.in/webnice/d2s.v1/d2s"
+// Package d2s
+package d2s
 
-//import "gopkg.in/webnice/debug.v1"
-//import "gopkg.in/webnice/log.v2"
 import (
 	"bytes"
 	"database/sql"
 	"fmt"
 	"os"
 
-	"gopkg.in/webnice/d2s.v1/d2s/mysql"
-	d2sTypes "gopkg.in/webnice/d2s.v1/d2s/types"
+	"github.com/webnice/d2s/mysql"
+	d2sTypes "github.com/webnice/d2s/types"
 )
 
 // New creates a new object and return interface
@@ -53,10 +52,13 @@ func (d2s *impl) Create(
 	tableName string,
 	packageName string,
 	structureName string,
-	fileName string) (err error) {
-	var inf *d2sTypes.TableInfo
-	var buf *bytes.Buffer
-	var fh *os.File
+	fileName string,
+) (err error) {
+	var (
+		inf *d2sTypes.TableInfo
+		buf *bytes.Buffer
+		fh  *os.File
+	)
 
 	if inf, err = d2s.dialect.TableInfo(d2s.db, databaseName, tableName); err != nil {
 		err = fmt.Errorf("get table info error: %s", err)

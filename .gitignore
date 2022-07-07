@@ -3,12 +3,20 @@
 *.a
 *.so
 
+# IDE
+.project
+.settings
+.idea
+
 # Folders
 _obj
 _test
-src
-pkg
-bin
+_dev
+/logs
+/log
+/storage
+/tmp
+/rpmbuild
 
 # Architecture specific extensions/prefixes
 *.[568vq]
@@ -19,10 +27,42 @@ bin
 _cgo_defun.c
 _cgo_gotypes.go
 _cgo_export.*
-
 _testmain.go
 
 *.exe
 *.test
 *.prof
-*.log
+
+# Binaries
+/bin/
+/pkg/
+
+# Dependences
+/*.log
+.localpackages
+
+# Configs and etc...
+/.env
+/cache
+/conf/*.yml
+!/conf/*.yml.example
+!/conf/*.yml.example.yml
+!/conf/*.example.yml
+!/conf/*.example.log.yml
+/conf/keys/*
+!/conf/keys/*.md
+/conf/keys/jwt.private
+/conf/keys/jwt.public
+/conf/keys/server.private
+/conf/keys/server.public
+/run/*.pid
+/run/*.sock
+/run/*.state
+/run/*.bolt.db
+/doc/*.mwb.bak
+/doc/.~lock.*
+nohup.out
+/result.*
+/conf/proxy.txt
+/.config
+/*.txt

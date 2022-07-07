@@ -1,10 +1,7 @@
-package types // import "gopkg.in/webnice/d2s.v1/d2s/types"
+// Package types
+package types
 
-//import "gopkg.in/webnice/debug.v1"
-//import "gopkg.in/webnice/log.v2"
-import (
-	"database/sql"
-)
+import "database/sql"
 
 // Dialect abstracts the details of specific SQL dialects
 type Dialect interface {

@@ -1,13 +1,13 @@
 package main
 
-//import "gopkg.in/webnice/debug.v1"
-import "gopkg.in/webnice/log.v2"
 import (
 	"database/sql"
 	"fmt"
 
-	"gopkg.in/webnice/d2s.v1/d2s"
-	d2sTypes "gopkg.in/webnice/d2s.v1/d2s/types"
+	"github.com/webnice/d2s"
+	d2sTypes "github.com/webnice/d2s/types"
+
+	log "github.com/webnice/lv2"
 
 	// Init database drivers
 	_ "github.com/go-sql-driver/mysql" // Mysql
@@ -19,11 +19,13 @@ import (
 
 func main() {
 	const cmdCreate = `create`
-	var err error
-	var db2struct d2s.Interface
-	var cmd string
-	var arg *Args
-	var db *sql.DB
+	var (
+		err       error
+		db2struct d2s.Interface
+		cmd       string
+		arg       *Args
+		db        *sql.DB
+	)
 
 	// Логирование
 	log.Gist().StandardLogSet()

@@ -1,14 +1,13 @@
-package d2s // import "gopkg.in/webnice/d2s.v1/d2s"
+// Package d2s
+package d2s
 
-//import "gopkg.in/webnice/debug.v1"
-//import "gopkg.in/webnice/log.v2"
 import (
 	"bytes"
 	"fmt"
 	"strings"
 	"time"
 
-	d2sTypes "gopkg.in/webnice/d2s.v1/d2s/types"
+	d2sTypes "github.com/webnice/d2s/types"
 )
 
 // Generator Создание контента golang файла на основе загруженных данных таблицы
@@ -20,9 +19,11 @@ func (d2s *impl) Generator(inf *d2sTypes.TableInfo) (ret *bytes.Buffer, err erro
 		keyReturn     = "\r"
 		columnsFormat = "%%-%ds %%-%ds `%%-%ds` // %%s"
 	)
-	var vars *tplVar
-	var col *tplVarCol
-	var i, maxLengthName int
+	var (
+		vars             *tplVar
+		col              *tplVarCol
+		i, maxLengthName int
+	)
 
 	ret = &bytes.Buffer{}
 	vars = &tplVar{
@@ -70,7 +71,7 @@ func (d2s *impl) Generator(inf *d2sTypes.TableInfo) (ret *bytes.Buffer, err erro
 	return
 }
 
-// Создание тэгов описания колонки
+// GeneratorTags Создание тэгов описания колонки
 func (d2s *impl) GeneratorTags(col *d2sTypes.ColumnInfo, max int) (ret string) {
 	const (
 		stdDbTag      = `db:"%s"`
@@ -78,9 +79,11 @@ func (d2s *impl) GeneratorTags(col *d2sTypes.ColumnInfo, max int) (ret string) {
 		grmPrimaryKey = `primary_key;`
 		semicolon     = `;`
 	)
-	var buf *bytes.Buffer
-	var std, grm string
-	var stdLengthMax int
+	var (
+		buf          *bytes.Buffer
+		std, grm     string
+		stdLengthMax int
+	)
 
 	buf = &bytes.Buffer{}
 	// Теги для database/sql и github.com/jmoiron/sqlx
