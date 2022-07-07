@@ -7,5 +7,5 @@ Golang library
 
 #### Install
 ```bash
-go get -u github.com/webnice/d2s/db2struct
+go install github.com/webnice/d2s/db2struct@latest
 ```
