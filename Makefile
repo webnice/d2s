@@ -21,6 +21,10 @@ dep:
 	@go mod vendor
 .PHONY: dep
 
+build:
+	@go build -o bin/db2struct github.com/webnice/d2s/db2struct
+.PHONY: build
+
 test:
 	@echo "mode: set" > $(DIR)/coverage.log
 	@for PACKET in $(TESTPACKETS); do \
