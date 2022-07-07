@@ -1,14 +1,14 @@
-module gopkg.in/webnice/d2s.v1
+module github.com/webnice/d2s
 
-go 1.12
+go 1.18
 
 require (
-	github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc // indirect
-	github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/go-sql-driver/mysql v1.4.1
-	github.com/stretchr/testify v1.3.0 // indirect
-	google.golang.org/appengine v1.4.0 // indirect
+	github.com/go-sql-driver/mysql v1.6.0
+	github.com/webnice/lv2 v0.0.0-20201212082251-996f95a7bf70
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
-	gopkg.in/webnice/log.v2 v2.0.0-20180614164658-0d0f83550387
+)
+
+require (
+	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
+	github.com/alecthomas/units v0.0.0-20211218093645-b94a6e3cc137 // indirect
 )

@@ -1,30 +1,33 @@
-# github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc
+# github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
+## explicit
 github.com/alecthomas/template
 github.com/alecthomas/template/parse
-# github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf
+# github.com/alecthomas/units v0.0.0-20211218093645-b94a6e3cc137
+## explicit; go 1.15
 github.com/alecthomas/units
-# github.com/go-sql-driver/mysql v1.4.1
+# github.com/go-sql-driver/mysql v1.6.0
+## explicit; go 1.10
 github.com/go-sql-driver/mysql
-# google.golang.org/appengine v1.4.0
-google.golang.org/appengine/cloudsql
+# github.com/webnice/lv2 v0.0.0-20201212082251-996f95a7bf70
+## explicit; go 1.15
+github.com/webnice/lv2
+github.com/webnice/lv2/formater
+github.com/webnice/lv2/gelf
+github.com/webnice/lv2/level
+github.com/webnice/lv2/message
+github.com/webnice/lv2/middleware
+github.com/webnice/lv2/middleware/fswformattext
+github.com/webnice/lv2/receiver
+github.com/webnice/lv2/receiver/fsfile
+github.com/webnice/lv2/receiver/fsfilerotation
+github.com/webnice/lv2/receiver/gelf
+github.com/webnice/lv2/receiver/stderr
+github.com/webnice/lv2/receiver/stdout
+github.com/webnice/lv2/receiver/syslog
+github.com/webnice/lv2/sender
+github.com/webnice/lv2/trace
+github.com/webnice/lv2/uuid
+github.com/webnice/lv2/writer
 # gopkg.in/alecthomas/kingpin.v2 v2.2.6
+## explicit
 gopkg.in/alecthomas/kingpin.v2
-# gopkg.in/webnice/log.v2 v2.0.0-20180614164658-0d0f83550387
-gopkg.in/webnice/log.v2
-gopkg.in/webnice/log.v2/level
-gopkg.in/webnice/log.v2/message
-gopkg.in/webnice/log.v2/receiver
-gopkg.in/webnice/log.v2/sender
-gopkg.in/webnice/log.v2/writer
-gopkg.in/webnice/log.v2/trace
-gopkg.in/webnice/log.v2/uuid
-gopkg.in/webnice/log.v2/receiver/fsfile
-gopkg.in/webnice/log.v2/receiver/fsfilerotation
-gopkg.in/webnice/log.v2/receiver/gelf
-gopkg.in/webnice/log.v2/receiver/stderr
-gopkg.in/webnice/log.v2/receiver/stdout
-gopkg.in/webnice/log.v2/receiver/syslog
-gopkg.in/webnice/log.v2/middleware
-gopkg.in/webnice/log.v2/middleware/fswformattext
-gopkg.in/webnice/log.v2/formater
-gopkg.in/webnice/log.v2/gelf
