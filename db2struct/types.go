@@ -2,7 +2,7 @@ package main
 
 import "gopkg.in/alecthomas/kingpin.v2"
 
-// Args The arguments.
+// Args Аргументы командной строки.
 type Args struct {
 	Debug     bool               // Debug flag.
 	Driver    string             // Driver of database.
@@ -11,6 +11,6 @@ type Args struct {
 	Table     string             // Table name.
 	Package   string             // Package name.
 	Structure string             // Structure name.
-	File      string             // Name of file for create golang structure.
-	Create    *kingpin.CmdClause // Creates new migration file with next version.
+	File      string             // Имя файла для создания структуры golang.
+	Create    *kingpin.CmdClause // Создает новый файл миграции со следующей версией.
 }

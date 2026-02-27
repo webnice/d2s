@@ -1,7 +1,6 @@
-// Package types
 package types
 
-// GoType Golang types map.
+// GoType Карта типов.
 type GoType map[bool]string
 
 // Nullable type to string.

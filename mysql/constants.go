@@ -1,4 +1,3 @@
-// Package mysql
 package mysql
 
 const (

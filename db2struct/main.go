@@ -6,8 +6,8 @@ import (
 
 	"github.com/webnice/d2s"
 	d2sTypes "github.com/webnice/d2s/types"
-
-	log "github.com/webnice/lv2"
+	kitModuleCfg "github.com/webnice/kit/v4/module/cfg"
+	kitTypes "github.com/webnice/kit/v4/types"
 
 	// Драйвера базы данных.
 	_ "github.com/go-sql-driver/mysql" // Mysql.
@@ -16,6 +16,9 @@ import (
 	//_ "github.com/lib/pq"               // Postgres, Cockroach, Redshift.
 	//_ "github.com/ziutek/mymysql/godrv" // App Engine CloudSQL.
 )
+
+// Ссылка на менеджер логирования.
+func log() kitTypes.Logger { return kitModuleCfg.Get().Log() }
 
 func main() {
 	const cmdCreate = `create`
@@ -27,10 +30,6 @@ func main() {
 		db        *sql.DB
 	)
 
-	// Логирование.
-	log.Gist().StandardLogSet()
-	defer log.Done()
-	defer log.Gist().StandardLogUnset()
 	// Checking driver and set dialect.
 	db2struct = d2s.New()
 	switch cmd, arg = args(); arg.Driver {
@@ -46,15 +45,15 @@ func main() {
 		err = fmt.Errorf("%q driver not supported", arg.Driver)
 	}
 	if err != nil {
-		log.Fatal(err.Error())
+		log().Fatal(err.Error())
 	}
 	// Opening database connection.
 	if db, err = sql.Open(arg.Driver, arg.Dsn); err != nil {
-		log.Fatalf("connect to database error: %s", err)
+		log().Fatalf("connect to database error: %s", err)
 	}
 	defer func() {
 		if err = db.Close(); err != nil {
-			log.Fatalf("close database error: %s", err)
+			log().Fatalf("close database error: %s", err)
 		}
 	}()
 	db.SetConnMaxLifetime(0)
@@ -73,6 +72,6 @@ func main() {
 		argUsage()
 	}
 	if err != nil {
-		log.Fatalf("db2struct error: %s", err)
+		log().Fatalf("db2struct error: %s", err)
 	}
 }

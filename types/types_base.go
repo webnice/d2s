@@ -1,13 +1,12 @@
-// Package types
 package types
 
-// Base type.
+// Base Базовый тип.
 type Base struct {
 	Simple     string // Простейший базовый тип.
 	IsNullable bool   // Флаг nullable, =true значение может быть NULL.
 }
 
-// NewBase Create new object type Base.
+// NewBase Конструктор объекта базового типа.
 func NewBase(simple string) *Base {
 	var bt = &Base{simple, false}
 	return bt
@@ -16,7 +15,7 @@ func NewBase(simple string) *Base {
 // Nullable Set nullable flag.
 func (bt *Base) Nullable(isNullable bool) { bt.IsNullable = isNullable }
 
-// String Return type as string.
+// String Реализация интерфейса stringify.
 func (bt *Base) String() string {
 	if _, ok := typesMap[bt.Simple]; !ok {
 		return ""

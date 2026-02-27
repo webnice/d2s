@@ -1,4 +1,3 @@
-// Package mysql
 package mysql
 
 import (
@@ -7,11 +6,14 @@ import (
 	"strings"
 
 	d2sTypes "github.com/webnice/d2s/types"
-
-	log "github.com/webnice/lv2"
+	kitModuleCfg "github.com/webnice/kit/v4/module/cfg"
+	kitTypes "github.com/webnice/kit/v4/types"
 )
 
-// Dialect Return SQL dialect.
+// Ссылка на менеджер логирования.
+func log() kitTypes.Logger { return kitModuleCfg.Get().Log() }
+
+// Dialect Возвращает диалект SQL.
 func Dialect() Interface {
 	var msl = new(impl)
 	return msl
@@ -52,7 +54,7 @@ func (msl *impl) DatabaseCurrent(db *sql.DB) (ret string, err error) {
 	}
 	defer func() {
 		if e := rows.Close(); e != nil {
-			log.Errorf("close query rows error: %s", e)
+			log().Errorf("close query rows error: %s", e)
 		}
 	}()
 	for rows.Next() {
@@ -80,7 +82,7 @@ func (msl *impl) TableComment(db *sql.DB, inf *d2sTypes.TableInfo) (err error) {
 	}
 	defer func() {
 		if e := rows.Close(); e != nil {
-			log.Errorf("close query rows error: %s", e)
+			log().Errorf("close query rows error: %s", e)
 		}
 	}()
 	for rows.Next() {
@@ -118,7 +120,7 @@ func (msl *impl) tableColumns(db *sql.DB, inf *d2sTypes.TableInfo) (err error) {
 	}
 	defer func() {
 		if e := rows.Close(); e != nil {
-			log.Errorf("close query rows error: %s", e)
+			log().Errorf("close query rows error: %s", e)
 		}
 	}()
 	for rows.Next() {

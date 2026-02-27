@@ -1,9 +1,8 @@
-// Package types
 package types
 
 import "database/sql"
 
-// Dialect abstracts the details of specific SQL dialects.
+// Dialect Содержит подробные сведения о конкретных диалектах SQL.
 type Dialect interface {
 	// DatabaseCurrent Получение имени текущей базы данных выбранной через DSN.
 	DatabaseCurrent(db *sql.DB) (ret string, err error)

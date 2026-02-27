@@ -1,11 +1,10 @@
-// Package mysql
 package mysql
 
 import d2sTypes "github.com/webnice/d2s/types"
 
-// Interface is an interface of package.
+// Interface Интерфейс пакета.
 type Interface d2sTypes.Dialect
 
-// impl is an implementation of package.
+// Объект сущности пакета.
 type impl struct {
 }

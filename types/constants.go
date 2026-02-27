@@ -1,4 +1,3 @@
-// Package types
 package types
 
 const (
@@ -45,14 +44,14 @@ const (
 )
 
 var (
-	// Abbreviations Main abbreviations.
+	// Abbreviations Основные сокращения.
 	Abbreviations = []string{"API", "ASCII", "CPU", "CSS", "DNS", "EOF",
 		"GUID", "HTML", "HTTP", "HTTPS", "ID", "IP", "JSON", "LHS", "QPS",
 		"RAM", "RHS", "RPC", "SLA", "SMTP", "SSH", "TLS", "TTL", "UI",
 		"UID", "UUID", "URI", "URL", "UTF8", "VM", "XML",
 	}
 
-	// NumberToWordMap Map for conversion first symbol of a structure fields from number to word.
+	// NumberToWordMap Карта для преобразования первого символа структурных полей из числа в слово.
 	NumberToWordMap = map[rune]string{
 		'0': "Nil", '1': "One", '2': "Two", '3': "Three", '4': "Four",
 		'5': "Five", '6': "Six", '7': "Seven", '8': "Eight", '9': "Nine",
