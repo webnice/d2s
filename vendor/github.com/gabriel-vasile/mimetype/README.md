@@ -13,9 +13,6 @@
   <a href="https://pkg.go.dev/github.com/gabriel-vasile/mimetype">
     <img alt="Go Reference" src="https://pkg.go.dev/badge/github.com/gabriel-vasile/mimetype.svg">
   </a>
-  <a href="https://goreportcard.com/report/github.com/gabriel-vasile/mimetype">
-    <img alt="Go report card" src="https://goreportcard.com/badge/github.com/gabriel-vasile/mimetype">
-  </a>
   <a href="LICENSE">
     <img alt="License" src="https://img.shields.io/badge/License-MIT-green.svg">
   </a>

@@ -1,7 +1,6 @@
 ## universal-translator
 <img align="right" src="https://raw.githubusercontent.com/go-playground/universal-translator/master/logo.png">![Project status](https://img.shields.io/badge/version-0.18.1-green.svg)
 [![Coverage Status](https://coveralls.io/repos/github/go-playground/universal-translator/badge.svg)](https://coveralls.io/github/go-playground/universal-translator)
-[![Go Report Card](https://goreportcard.com/badge/github.com/go-playground/universal-translator)](https://goreportcard.com/report/github.com/go-playground/universal-translator)
 [![GoDoc](https://godoc.org/github.com/go-playground/universal-translator?status.svg)](https://godoc.org/github.com/go-playground/universal-translator)
 ![License](https://img.shields.io/dub/l/vibe-d.svg)
 
