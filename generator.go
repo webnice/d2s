@@ -1,4 +1,3 @@
-// Package d2s
 package d2s
 
 import (
@@ -10,19 +9,21 @@ import (
 	d2sTypes "github.com/webnice/d2s/types"
 )
 
-// Generator Создание контента golang файла на основе загруженных данных таблицы
+// Generator Создание контента golang файла на основе загруженных данных таблицы.
 func (d2s *impl) Generator(inf *d2sTypes.TableInfo) (ret *bytes.Buffer, err error) {
 	const (
-		libTime       = "time.Time"
-		libNil        = "nul."
-		keyNewLine    = "\n"
-		keyReturn     = "\r"
+		prefixTime    = "time."
+		prefixNix     = "nix."
+		typeJSON      = "json.RawMessage"
 		columnsFormat = "%%-%ds %%-%ds `%%-%ds` // %%s"
 	)
 	var (
 		vars             *tplVar
 		col              *tplVarCol
 		i, maxLengthName int
+		importTime       bool
+		importNix        bool
+		importJSON       bool
 	)
 
 	ret = &bytes.Buffer{}
@@ -41,105 +42,174 @@ func (d2s *impl) Generator(inf *d2sTypes.TableInfo) (ret *bytes.Buffer, err erro
 		}
 	}
 	for i = range inf.Columns {
-		col = &tplVarCol{
-			Name:    inf.Columns[i].Name.CamelCase(),
-			Type:    inf.Columns[i].TypeGolang.String(),
-			Tags:    d2s.GeneratorTags(inf.Columns[i], maxLengthName),
-			Comment: strings.Replace(inf.Columns[i].Comment, keyReturn, "", -1),
+		if col, err = d2s.generatorColumn(inf.Columns[i], maxLengthName); err != nil {
+			return
 		}
-		col.Comment = strings.Replace(col.Comment, keyNewLine, "\\n", -1)
-		if vars.ColumnNameLength < len(inf.Columns[i].Name.CamelCase()) {
-			vars.ColumnNameLength = len(inf.Columns[i].Name.CamelCase())
+		if vars.ColumnNameLength < len(col.Name) {
+			vars.ColumnNameLength = len(col.Name)
 		}
-		if vars.ColumnTypeLength < len(inf.Columns[i].TypeGolang.String()) {
-			vars.ColumnTypeLength = len(inf.Columns[i].TypeGolang.String())
+		if vars.ColumnTypeLength < len(col.Type) {
+			vars.ColumnTypeLength = len(col.Type)
 		}
 		if vars.ColumnTagsLength < len(col.Tags) {
 			vars.ColumnTagsLength = len(col.Tags)
 		}
-		if strings.EqualFold(col.Type, libTime) {
-			vars.IsImportTime = true
+		if strings.HasPrefix(col.Type, prefixTime) {
+			importTime = true
 		}
-		if strings.Contains(col.Type, libNil) {
-			vars.IsImportNil = true
+		if strings.Contains(col.Type, prefixNix) {
+			importNix = true
+		}
+		if strings.Contains(col.Type, typeJSON) {
+			importJSON = true
 		}
 		vars.Columns = append(vars.Columns, col)
 	}
+	vars.Imports = d2s.importBlock(importJSON, importTime, importNix)
 	vars.ColumnsFormat = fmt.Sprintf(columnsFormat, vars.ColumnNameLength, vars.ColumnTypeLength, vars.ColumnTagsLength)
 	err = tpl.Execute(ret, vars)
 
 	return
 }
 
-// GeneratorTags Создание тэгов описания колонки
-func (d2s *impl) GeneratorTags(col *d2sTypes.ColumnInfo, max int) (ret string) {
-	const (
-		stdDbTag      = `db:"%s"`
-		grmDbtag      = `gorm:"column:%s;%%-%ds`
-		grmPrimaryKey = `primary_key;`
-		semicolon     = `;`
-	)
+// importBlock Формирование блока импортов сгенерированного golang файла.
+func (d2s *impl) importBlock(importJSON, importTime, importNix bool) (ret string) {
+	var std, ext []string
+
+	if importJSON {
+		std = append(std, `"encoding/json"`)
+	}
+	if importTime {
+		std = append(std, `"time"`)
+	}
+	if importNix {
+		ext = append(ext, `"github.com/webnice/nix/v2"`)
+	}
+	switch {
+	case len(std)+len(ext) == 0:
+		return
+	case len(std)+len(ext) == 1:
+		return "import " + append(std, ext...)[0]
+	}
+	ret = "import (\n"
+	for _, p := range std {
+		ret += "\t" + p + "\n"
+	}
+	if len(std) > 0 && len(ext) > 0 {
+		ret += "\n"
+	}
+	for _, p := range ext {
+		ret += "\t" + p + "\n"
+	}
+	ret += ")"
+
+	return
+}
+
+// generatorColumn Формирование описания колонки с учётом переопределения типа.
+// Приоритет переопределений: командная строка, комментарий колонки базы данных,
+// базовый маппинг типов.
+func (d2s *impl) generatorColumn(ci *d2sTypes.ColumnInfo, maxLengthName int) (ret *tplVarCol, err error) {
+	const keyNewLine, keyReturn = "\n", "\r"
+
 	var (
-		buf          *bytes.Buffer
-		std, grm     string
-		stdLengthMax int
+		canonicalCLI, canonicalComment, cleanedComment string
+		hasCLI, hasComment                             bool
 	)
 
-	buf = &bytes.Buffer{}
-	// Теги для database/sql и github.com/jmoiron/sqlx
-	stdLengthMax = len(stdDbTag) - 2 + max
+	ret = &tplVarCol{
+		Name: ci.Name.CamelCase(),
+		Tags: d2s.GeneratorTags(ci, maxLengthName),
+	}
+	canonicalCLI, hasCLI = d2s.override[strings.ToLower(string(ci.Name))]
+	canonicalComment, cleanedComment, hasComment = d2sTypes.OverrideComment(ci.Comment)
+	switch {
+	case hasCLI:
+		ret.Type = d2sTypes.OverrideGoType(canonicalCLI, ci.IsNullable)
+	case hasComment:
+		ret.Type = d2sTypes.OverrideGoType(canonicalComment, ci.IsNullable)
+	case ci.TypeGolang != nil && ci.TypeGolang.Simple == d2sTypes.TUnknown:
+		// Неизвестный тип базы данных и нет переопределения типа поля.
+		err = fmt.Errorf("не реализовано сопоставление типа %q, укажите тип поля через переопределение", ci.TypeSimple)
+		return
+	default:
+		ret.Type = ci.TypeGolang.String()
+	}
+	// Маркер {...} удаляется из комментария независимо от победившего переопределения.
+	ret.Comment = strings.Replace(cleanedComment, keyReturn, "", -1)
+	ret.Comment = strings.Replace(ret.Comment, keyNewLine, "\\n", -1)
+
+	return
+}
+
+// GeneratorTags Создание тэгов описания колонки.
+func (d2s *impl) GeneratorTags(col *d2sTypes.ColumnInfo, max int) (ret string) {
+	const (
+		stdDbTag        = `db:"%s"`
+		stdDbTagLength  = len(stdDbTag) - 2
+		grmTagStart     = `gorm:"`
+		grmTagEnd       = `"`
+		grmColumn       = `column:%s`
+		grmPrimaryKey   = `primaryKey`
+		grmAutoInc      = `autoIncrement`
+		grmNotNull      = `not null`
+		grmDefault      = `default:%s`
+		grmDefaultNull  = `default:null`
+		grmSize         = `size:%d`
+		grmPrecision    = `precision:%d`
+		grmScale        = `scale:%d`
+		grmType         = `type:%s`
+		keyUnsigned     = ` UNSIGNED`
+		keySemicolon    = `;`
+		escapeSemicolon = `\;`
+	)
+	var (
+		settings []string
+		std      string
+		stdMax   int
+	)
+
+	// Теги для database/sql и github.com/jmoiron/sqlx.
+	stdMax = stdDbTagLength + max
 	std = fmt.Sprintf(stdDbTag, col.Name)
-	_, _ = fmt.Fprintf(buf, fmt.Sprintf(`%%-%ds`, stdLengthMax), std)
-	// Теги для github.com/jinzhu/gorm
-	grm = fmt.Sprintf(grmDbtag, col.Name, max-len(col.Name)+len(grmPrimaryKey))
+	// Теги для gorm.io/gorm.
+	settings = append(settings, fmt.Sprintf(grmColumn, col.Name))
 	if col.IsPrimary {
-		grm = fmt.Sprintf(grm, grmPrimaryKey)
-	} else {
-		grm = fmt.Sprintf(grm, "")
+		settings = append(settings, grmPrimaryKey)
 	}
-	_, _ = fmt.Fprintf(buf, " %s", grm)
-	// AUTO_INCREMENT
 	if col.IsAutoIncrement {
-		_, _ = fmt.Fprintf(buf, "AUTO_INCREMENT;")
+		settings = append(settings, grmAutoInc)
 	}
-	// NOT NULL
-	if col.IsNullable {
-		_, _ = fmt.Fprintf(buf, "NULL;")
-	} else {
-		_, _ = fmt.Fprintf(buf, "NOT NULL;")
+	if !col.IsNullable {
+		settings = append(settings, grmNotNull)
 	}
-	// DEFAULT
-	if col.Default == nil {
-		_, _ = fmt.Fprintf(buf, "DEFAULT NULL;")
-	} else {
-		_, _ = fmt.Fprintf(buf, "DEFAULT '%s';", *col.Default)
+	switch {
+	case col.Default != nil:
+		settings = append(settings, fmt.Sprintf(grmDefault, strings.ReplaceAll(*col.Default, keySemicolon, escapeSemicolon)))
+	case col.IsNullable:
+		settings = append(settings, grmDefaultNull)
 	}
-	// SIZE
-	if col.TypeGolang.Simple == d2sTypes.TString && col.Size != nil && *col.Size > 0 {
-		_, _ = fmt.Fprintf(buf, "size:%d;", *col.Size)
+	if (col.TypeGolang.Simple == d2sTypes.TString || col.TypeGolang.Simple == d2sTypes.TBytes) &&
+		col.Size != nil && *col.Size > 0 {
+		settings = append(settings, fmt.Sprintf(grmSize, *col.Size))
 	}
-	// PRECISION and SCALE
 	switch col.TypeGolang.Simple {
-	case d2sTypes.TFloat64, d2sTypes.TInt64, d2sTypes.TUint64:
+	case d2sTypes.TFloat32, d2sTypes.TFloat64,
+		d2sTypes.TInt8, d2sTypes.TInt16, d2sTypes.TInt32, d2sTypes.TInt64,
+		d2sTypes.TUint8, d2sTypes.TUint16, d2sTypes.TUint32, d2sTypes.TUint64:
 		if col.Precision != nil && *col.Precision > 0 {
-			_, _ = fmt.Fprintf(buf, "precision:%d;", *col.Precision)
+			settings = append(settings, fmt.Sprintf(grmPrecision, *col.Precision))
 		}
 		if col.Scale != nil && *col.Scale > 0 {
-			_, _ = fmt.Fprintf(buf, "scale:%d;", *col.Scale)
+			settings = append(settings, fmt.Sprintf(grmScale, *col.Scale))
 		}
 	}
-	// TYPE
-	_, _ = fmt.Fprintf(buf, "type:%s", col.TypeFull)
-	// UNSIGNED append for type
 	if col.IsUnsigned {
-		_, _ = fmt.Fprintf(buf, " UNSIGNED;")
+		settings = append(settings, fmt.Sprintf(grmType, col.TypeFull+keyUnsigned))
 	} else {
-		_, _ = fmt.Fprintf(buf, ";")
+		settings = append(settings, fmt.Sprintf(grmType, col.TypeFull))
 	}
-	// Удаление завершающей точки с запятой
-	buf = bytes.NewBuffer(bytes.TrimRight(buf.Bytes(), semicolon))
-	_, _ = fmt.Fprintf(buf, `"`)
-	ret = buf.String()
+	ret = fmt.Sprintf("%-*s %s%s%s", stdMax, std, grmTagStart, strings.Join(settings, keySemicolon), grmTagEnd)
 
 	return
 }

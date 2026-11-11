@@ -30,7 +30,7 @@ func main() {
 		db        *sql.DB
 	)
 
-	// Checking driver and set dialect.
+	// Проверка драйвера и установка диалекта.
 	db2struct = d2s.New()
 	switch cmd, arg = args(); arg.Driver {
 	case d2sTypes.DrvMysql, d2sTypes.DrvPostgres, d2sTypes.DrvSqlite3, d2sTypes.DrvClickhouse:
@@ -42,29 +42,38 @@ func main() {
 		err = db2struct.Dialect(arg.Driver)
 		arg.Driver = d2sTypes.DrvMysql
 	default:
-		err = fmt.Errorf("%q driver not supported", arg.Driver)
+		err = fmt.Errorf("драйвер %q не поддерживается", arg.Driver)
 	}
 	if err != nil {
 		log().Fatal(err.Error())
+
+		return
 	}
-	// Opening database connection.
+	// Открытие соединения с базой данных.
 	if db, err = sql.Open(arg.Driver, arg.Dsn); err != nil {
-		log().Fatalf("connect to database error: %s", err)
+		log().Fatalf("ошибка соединения с базой данных: %s", err)
+
+		return
 	}
 	defer func() {
 		if err = db.Close(); err != nil {
-			log().Fatalf("close database error: %s", err)
+			log().Fatalf("ошибка закрытия соединения с базой данных: %s", err)
 		}
 	}()
 	db.SetConnMaxLifetime(0)
-	// Check correct value.
+	// Проверка корректности значений.
 	if arg.Table == "" || arg.Package == "" || arg.Structure == "" || arg.File == "" {
 		argUsage()
 		return
 	}
-	// Running command of database migration with different arguments.
+	// Выполнение команды миграции базы данных с различными аргументами.
 	switch cmd {
 	case cmdCreate:
+		if err = db2struct.Types(arg.Types); err != nil {
+			log().Fatalf("ошибка переопределения типов: %s", err)
+
+			return
+		}
 		err = db2struct.
 			Connect(db).
 			Create(arg.Database, arg.Table, arg.Package, arg.Structure, arg.File)
@@ -72,6 +81,6 @@ func main() {
 		argUsage()
 	}
 	if err != nil {
-		log().Fatalf("db2struct error: %s", err)
+		log().Fatalf("ошибка db2struct: %s", err)
 	}
 }

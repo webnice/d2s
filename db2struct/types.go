@@ -4,13 +4,14 @@ import "github.com/alecthomas/kingpin/v2"
 
 // Args Аргументы командной строки.
 type Args struct {
-	Debug     bool               // Debug flag.
-	Driver    string             // Driver of database.
-	Dsn       string             // Database source name (DSN).
-	Database  string             // Database name.
-	Table     string             // Table name.
-	Package   string             // Package name.
-	Structure string             // Structure name.
+	Debug     bool               // Флаг режима отладки.
+	Driver    string             // Драйвер базы данных.
+	Dsn       string             // Имя источника данных (DSN).
+	Database  string             // Имя базы данных.
+	Table     string             // Имя таблицы.
+	Package   string             // Имя пакета.
+	Structure string             // Имя структуры.
 	File      string             // Имя файла для создания структуры golang.
-	Create    *kingpin.CmdClause // Создает новый файл миграции со следующей версией.
+	Types     string             // Переопределение типов данных полей структуры.
+	Create    *kingpin.CmdClause // Команда создания структуры по таблице базы данных.
 }

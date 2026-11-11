@@ -8,7 +8,7 @@ import (
 // ColumnName Тип названия колонки.
 type ColumnName string
 
-// CamelCase Преобразование имени колонки в верблюжью нотацию и совместимый с golang формат.
+// CamelCase Преобразование имени колонки в верблюжью нотацию и формат, совместимый с golang.
 func (cn *ColumnName) CamelCase() (ret string) {
 	const underscore = '_'
 	var (

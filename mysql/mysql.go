@@ -3,6 +3,7 @@ package mysql
 import (
 	"database/sql"
 	"fmt"
+	"strconv"
 	"strings"
 
 	d2sTypes "github.com/webnice/d2s/types"
@@ -49,22 +50,22 @@ func (msl *impl) DatabaseCurrent(db *sql.DB) (ret string, err error) {
 	var rows *sql.Rows
 
 	if rows, err = db.Query(dbQuery); err != nil {
-		err = fmt.Errorf("query database error: %s", err)
+		err = fmt.Errorf("ошибка запроса к базе данных: %s", err)
 		return
 	}
 	defer func() {
 		if e := rows.Close(); e != nil {
-			log().Errorf("close query rows error: %s", e)
+			log().Errorf("ошибка закрытия строк запроса: %s", e)
 		}
 	}()
 	for rows.Next() {
 		if err = rows.Scan(&ret); err != nil {
-			err = fmt.Errorf("scan error: %s", err)
+			err = fmt.Errorf("ошибка сканирования: %s", err)
 			return
 		}
 	}
 	if ret == "" {
-		err = fmt.Errorf("database is not selected")
+		err = fmt.Errorf("база данных не выбрана")
 		return
 	}
 
@@ -77,17 +78,17 @@ func (msl *impl) TableComment(db *sql.DB, inf *d2sTypes.TableInfo) (err error) {
 	var rows *sql.Rows
 
 	if rows, err = db.Query(dbQuery, inf.Database, inf.Table); err != nil {
-		err = fmt.Errorf("query database error: %s", err)
+		err = fmt.Errorf("ошибка запроса к базе данных: %s", err)
 		return
 	}
 	defer func() {
 		if e := rows.Close(); e != nil {
-			log().Errorf("close query rows error: %s", e)
+			log().Errorf("ошибка закрытия строк запроса: %s", e)
 		}
 	}()
 	for rows.Next() {
 		if err = rows.Scan(&inf.Comment); err != nil {
-			err = fmt.Errorf("scan error: %s", err)
+			err = fmt.Errorf("ошибка сканирования: %s", err)
 			return
 		}
 	}
@@ -115,12 +116,12 @@ func (msl *impl) tableColumns(db *sql.DB, inf *d2sTypes.TableInfo) (err error) {
 	)
 
 	if rows, err = db.Query(dbQuery, inf.Database, inf.Table); err != nil {
-		err = fmt.Errorf("query database error: %s", err)
+		err = fmt.Errorf("ошибка запроса к базе данных: %s", err)
 		return
 	}
 	defer func() {
 		if e := rows.Close(); e != nil {
-			log().Errorf("close query rows error: %s", e)
+			log().Errorf("ошибка закрытия строк запроса: %s", e)
 		}
 	}()
 	for rows.Next() {
@@ -138,27 +139,25 @@ func (msl *impl) tableColumns(db *sql.DB, inf *d2sTypes.TableInfo) (err error) {
 			&row.Precision,
 			&row.Scale,
 		)
-		// NULLABLE.
+		// Признак nullable.
 		isNullable = strings.TrimSpace(strings.ToLower(isNullable))
 		if isNullable == boolTrue1 || isNullable == boolTrue2 {
 			row.IsNullable = true
 		}
-		// Полный тип и UNSIGNED расширение типа.
+		// Полный тип колонки и признак UNSIGNED.
 		msl.tableColumnsFullTypeParse(row)
 		// Первичный ключ.
 		isPrimary = strings.TrimSpace(strings.ToLower(isPrimary))
 		row.IsPrimary = isPrimary == keyPrimary
-		// Авто инкремент.
+		// Автоинкремент.
 		row.IsAutoIncrement = strings.Contains(strings.ToLower(isAutoIncrement), keyAutoIncrement)
-		// Если что-то пошло не так
+		// Если что-то пошло не так.
 		if err != nil {
-			err = fmt.Errorf("scan error: %s", err)
+			err = fmt.Errorf("ошибка сканирования: %s", err)
 			return
 		}
-		// Конвертация типа в тип Golang.
-		if err = msl.columnTypeMapping(row); err != nil {
-			err = fmt.Errorf("database type conversion to golang type error: %s", err)
-		}
+		// Конвертация типа в тип golang.
+		msl.columnTypeMapping(row)
 		inf.Columns = append(inf.Columns, row)
 	}
 
@@ -177,34 +176,114 @@ func (msl *impl) tableColumnsFullTypeParse(col *d2sTypes.ColumnInfo) {
 }
 
 // Сопоставление типов данных в БД с типом данных в golang.
-func (msl *impl) columnTypeMapping(col *d2sTypes.ColumnInfo) (err error) {
+func (msl *impl) columnTypeMapping(col *d2sTypes.ColumnInfo) {
 	switch strings.ToLower(col.TypeSimple) {
 	case dbBoolean, dbBool, dbTinyint:
-		col.TypeGolang = d2sTypes.NewBase(d2sTypes.TBool)
+		// tinyint(1) — булев тип, tinyint без ширины и tinyint(N>1) — числовой.
+		if strings.ToLower(col.TypeSimple) == dbTinyint && msl.columnTypeWidth(col) != 1 {
+			col.TypeGolang = d2sTypes.NewBase(d2sTypes.TInt8)
+		} else {
+			col.TypeGolang = d2sTypes.NewBase(d2sTypes.TBool)
+		}
 		col.TypeGolang.Nullable(col.IsNullable)
 	case dbBinary, dbTinyblob, dbBlob, dbMediumblob, dbLongblob, dbVarbinary:
 		col.TypeGolang = d2sTypes.NewBase(d2sTypes.TBytes)
 		col.TypeGolang.Nullable(col.IsNullable)
-	case dbDecimal, dbDouble, dbFloat:
-		col.TypeGolang = d2sTypes.NewBase(d2sTypes.TFloat64)
+	case dbGeometry, dbPoint, dbLinestring, dbPolygon, dbMultipoint, dbMultilinestring,
+		dbMultipolygon, dbGeometrycollection:
+		// Пространственные типы отдаются драйвером во внутреннем бинарном формате.
+		col.TypeGolang = d2sTypes.NewBase(d2sTypes.TBytes)
+		col.TypeGolang.Nullable(col.IsNullable)
+	case dbDecimal:
+		// decimal(p,0) — целочисленный десятичный тип без потери точности.
+		if col.Scale != nil && *col.Scale > 0 {
+			col.TypeGolang = d2sTypes.NewBase(d2sTypes.TFloat64)
+		} else {
+			col.TypeGolang = d2sTypes.NewBase(d2sTypes.TBigInt)
+		}
+		col.TypeGolang.Nullable(col.IsNullable)
+	case dbDouble, dbFloat:
+		// float — 32-битный, double — 64-битный.
+		if strings.ToLower(col.TypeSimple) == dbDouble {
+			col.TypeGolang = d2sTypes.NewBase(d2sTypes.TFloat64)
+		} else {
+			col.TypeGolang = d2sTypes.NewBase(d2sTypes.TFloat32)
+		}
 		col.TypeGolang.Nullable(col.IsNullable)
 	case dbInt, dbSmallint, dbMediumint, dbBigint:
-		if col.IsUnsigned {
-			col.TypeGolang = d2sTypes.NewBase(d2sTypes.TUint64)
-		} else {
-			col.TypeGolang = d2sTypes.NewBase(d2sTypes.TInt64)
+		var signed, unsigned = d2sTypes.TInt32, d2sTypes.TUint32
+		switch strings.ToLower(col.TypeSimple) {
+		case dbSmallint:
+			signed, unsigned = d2sTypes.TInt16, d2sTypes.TUint16
+		case dbBigint:
+			signed, unsigned = d2sTypes.TInt64, d2sTypes.TUint64
 		}
+		if col.IsUnsigned {
+			col.TypeGolang = d2sTypes.NewBase(unsigned)
+		} else {
+			col.TypeGolang = d2sTypes.NewBase(signed)
+		}
+		col.TypeGolang.Nullable(col.IsNullable)
+	case dbBit:
+		// bit(1) — булев тип, bit(N>1) — битовая строка.
+		if msl.columnTypeWidth(col) > 1 {
+			col.TypeGolang = d2sTypes.NewBase(d2sTypes.TBytes)
+		} else {
+			col.TypeGolang = d2sTypes.NewBase(d2sTypes.TBool)
+		}
+		col.TypeGolang.Nullable(col.IsNullable)
+	case dbYear:
+		col.TypeGolang = d2sTypes.NewBase(d2sTypes.TInt16)
 		col.TypeGolang.Nullable(col.IsNullable)
 	case dbChar, dbEnum, dbVarchar, dbTinytext, dbText, dbMediumtext, dbLongtext:
 		col.TypeGolang = d2sTypes.NewBase(d2sTypes.TString)
 		col.TypeGolang.Nullable(col.IsNullable)
-	case dbDate, dbDatetime, dbTime, dbTimestamp:
+	case dbSet:
+		col.TypeGolang = d2sTypes.NewBase(d2sTypes.TStringSlice)
+		col.TypeGolang.Nullable(col.IsNullable)
+	case dbJson:
+		col.TypeGolang = d2sTypes.NewBase(d2sTypes.TRawMessage)
+		col.TypeGolang.Nullable(col.IsNullable)
+	case dbDate, dbDatetime, dbTimestamp:
 		col.TypeGolang = d2sTypes.NewBase(d2sTypes.TTime)
 		col.TypeGolang.Nullable(col.IsNullable)
+	case dbTime:
+		col.TypeGolang = d2sTypes.NewBase(d2sTypes.TDuration)
+		col.TypeGolang.Nullable(col.IsNullable)
+	case dbUuid:
+		// Нативный тип UUID MariaDB 10.7+.
+		col.TypeGolang = d2sTypes.NewBase(d2sTypes.TUUID)
+		col.TypeGolang.Nullable(col.IsNullable)
+	case dbInet4, dbInet6:
+		// Типы адресов IPv4 и IPv6 MariaDB 10.5+.
+		col.TypeGolang = d2sTypes.NewBase(d2sTypes.TIP)
+		col.TypeGolang.Nullable(col.IsNullable)
+	case dbVector:
+		// Векторный тип MariaDB 11.7+.
+		col.TypeGolang = d2sTypes.NewBase(d2sTypes.TBytes)
+		col.TypeGolang.Nullable(col.IsNullable)
 	default:
-		err = fmt.Errorf("not implemented type mapping for type %q", col.TypeSimple)
+		// Неизвестный тип базы данных: тип поля можно переопределить
+		// через командную строку или комментарий колонки.
+		col.TypeGolang = d2sTypes.NewBase(d2sTypes.TUnknown)
+		col.TypeGolang.Nullable(col.IsNullable)
+	}
+}
+
+// columnTypeWidth Извлечение ширины типа из полного типа колонки.
+// Например, из "TINYINT(1)" — 1, из "BIT(8)" — 8. Если ширина не указана — 0.
+func (msl *impl) columnTypeWidth(col *d2sTypes.ColumnInfo) (width int) {
+	const brackets = `()`
+
+	var open, close int
+
+	if open = strings.Index(col.TypeFull, brackets[:1]); open < 0 {
 		return
 	}
+	if close = strings.Index(col.TypeFull, brackets[1:]); close <= open {
+		return
+	}
+	width, _ = strconv.Atoi(col.TypeFull[open+1 : close])
 
 	return
 }

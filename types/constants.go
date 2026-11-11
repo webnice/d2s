@@ -21,26 +21,68 @@ const (
 )
 
 const (
-	// TBool The bool type.
+	// TBool Тип bool.
 	TBool = `bool`
 
-	// TBytes The slice of bytes.
+	// TBytes Срез байт.
 	TBytes = `bytes`
 
-	// TFloat64 The float64 type.
+	// TFloat32 Тип float32.
+	TFloat32 = `float32`
+
+	// TFloat64 Тип float64.
 	TFloat64 = `float64`
 
-	// TInt64 The int64 type.
+	// TInt8 Тип int8.
+	TInt8 = `int8`
+
+	// TInt16 Тип int16.
+	TInt16 = `int16`
+
+	// TInt32 Тип int32.
+	TInt32 = `int32`
+
+	// TInt64 Тип int64.
 	TInt64 = `int64`
 
-	// TString The string type.
+	// TString Тип string.
 	TString = `string`
 
-	// TTime The time.Time type.
+	// TStringSlice Срез строк.
+	TStringSlice = `strings`
+
+	// TTime Тип time.Time.
 	TTime = `time`
 
-	// TUint64 The uint64 type.
+	// TDuration Тип time.Duration.
+	TDuration = `duration`
+
+	// TBigInt Тип nix.BigInt.
+	TBigInt = `bigint`
+
+	// TRawMessage Тип json.RawMessage.
+	TRawMessage = `rawmessage`
+
+	// TUint8 Тип uint8.
+	TUint8 = `uint8`
+
+	// TUint16 Тип uint16.
+	TUint16 = `uint16`
+
+	// TUint32 Тип uint32.
+	TUint32 = `uint32`
+
+	// TUint64 Тип uint64.
 	TUint64 = `uint64`
+
+	// TUUID Тип nix.UUID.
+	TUUID = `uuid`
+
+	// TIP Тип nix.IP.
+	TIP = `ip`
+
+	// TUnknown Неизвестный тип базы данных.
+	TUnknown = `unknown`
 )
 
 var (
@@ -58,12 +100,25 @@ var (
 	}
 
 	typesMap = map[string]*GoType{
-		TBool:    {false: "bool", true: "nul.Bool"},
-		TBytes:   {false: "[]byte", true: "nul.Bytes"},
-		TFloat64: {false: "float64", true: "nul.Float64"},
-		TInt64:   {false: "int64", true: "nul.Int64"},
-		TString:  {false: "string", true: "nul.String"},
-		TTime:    {false: "time.Time", true: "nul.Time"},
-		TUint64:  {false: "uint64", true: "nul.Uint64"},
+		TBool:        {false: "bool", true: "nix.Bool"},
+		TBytes:       {false: "[]byte", true: "nix.Bytes"},
+		TFloat32:     {false: "float32", true: "nix.Float32"},
+		TFloat64:     {false: "float64", true: "nix.Float64"},
+		TInt8:        {false: "int8", true: "nix.Int8"},
+		TInt16:       {false: "int16", true: "nix.Int16"},
+		TInt32:       {false: "int32", true: "nix.Int32"},
+		TInt64:       {false: "int64", true: "nix.Int64"},
+		TString:      {false: "string", true: "nix.String"},
+		TStringSlice: {false: "[]string", true: "nix.StringSlice"},
+		TTime:        {false: "time.Time", true: "nix.Time"},
+		TDuration:    {false: "time.Duration", true: "nix.Duration"},
+		TBigInt:      {false: "nix.BigInt", true: "nix.BigInt"},
+		TRawMessage:  {false: "json.RawMessage", true: "nix.RawMessage"},
+		TUint8:       {false: "uint8", true: "nix.Uint8"},
+		TUint16:      {false: "uint16", true: "nix.Uint16"},
+		TUint32:      {false: "uint32", true: "nix.Uint32"},
+		TUint64:      {false: "uint64", true: "nix.Uint64"},
+		TUUID:        {false: "nix.UUID", true: "nix.UUID"},
+		TIP:          {false: "nix.IP", true: "nix.IP"},
 	}
 )

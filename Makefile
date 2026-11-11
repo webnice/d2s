@@ -26,14 +26,13 @@ build:
 .PHONY: build
 
 test:
-	@echo "mode: set" > $(DIR)/coverage.log
+	@echo "mode: count" > $(DIR)/coverage.log
 	@for PACKET in $(TESTPACKETS); do \
-		touch $(DIR)/coverage-tmp.log; \
-		GOPATH=${GOPATH} go test -v -covermode=count -coverprofile=$(DIR)/coverage-tmp.log $$PACKET; \
-		if [ "$$?" -ne "0" ]; then exit $$?; fi; \
+		GOPATH=${GOPATH} go test -v -covermode=count -coverprofile=$(DIR)/coverage-tmp.log $$PACKET || exit 1; \
 		tail -n +2 $(DIR)/coverage-tmp.log | sort -r | awk '{if($$1 != last) {print $$0;last=$$1}}' >> $(DIR)/coverage.log; \
-		rm -f $(DIR)/coverage-tmp.log; true; \
+		rm -f $(DIR)/coverage-tmp.log; \
 	done
+	@go tool cover -func=$(DIR)/coverage.log | tail -n 1
 .PHONY: test
 
 cover: test

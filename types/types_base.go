@@ -12,10 +12,10 @@ func NewBase(simple string) *Base {
 	return bt
 }
 
-// Nullable Set nullable flag.
+// Nullable Установка флага nullable.
 func (bt *Base) Nullable(isNullable bool) { bt.IsNullable = isNullable }
 
-// String Реализация интерфейса stringify.
+// String Строковое представление типа.
 func (bt *Base) String() string {
 	if _, ok := typesMap[bt.Simple]; !ok {
 		return ""

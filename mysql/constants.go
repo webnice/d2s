@@ -28,4 +28,22 @@ const (
 	dbMediumblob = "mediumblob"
 	dbVarbinary  = "varbinary"
 	dbTinyblob   = "tinyblob"
+	dbBit        = "bit"
+	dbYear       = "year"
+	dbSet        = "set"
+	dbJson       = "json"
+	dbGeometry   = "geometry"
+	dbPoint      = "point"
+	dbLinestring = "linestring"
+	dbPolygon    = "polygon"
+	dbMultipoint = "multipoint"
+	// Пространственные типы.
+	dbMultilinestring    = "multilinestring"
+	dbMultipolygon       = "multipolygon"
+	dbGeometrycollection = "geometrycollection"
+	// Типы данных MariaDB.
+	dbUuid   = "uuid"
+	dbInet4  = "inet4"
+	dbInet6  = "inet6"
+	dbVector = "vector"
 )
