@@ -77,55 +77,128 @@ func (nut *impl) ListenLoadFilesFdWithNames() (ret []*os.File, err error) {
 	return
 }
 
-// ListenersSystemdWithoutNames Возвращает срез net.Listener сокетов переданных в процесс сервера
-// из службы linux - systemd.
+// ListenersSystemdWithoutNames Возвращает срез net.Listener сокетов, переданных в процесс сервера
+// из службы Linux - systemd.
 func (nut *impl) ListenersSystemdWithoutNames() (ret []net.Listener, err error) {
 	var (
-		file  *os.File
-		files []*os.File
-		n     int
-		pc    net.Listener
+		all  []listenSystemdItem
+		item listenSystemdItem
 	)
 
-	files, err = nut.ListenLoadFilesFdWithNames()
-	ret = make([]net.Listener, len(files))
-	for n, file = range files {
-		if pc, err = nut.fnFl(file); err == nil {
-			ret[n], _ = pc, nut.fnFc(file)
+	if all, err = nut.listenSystemdLoadAll(); err != nil {
+		return
+	}
+	ret = make([]net.Listener, 0, len(all))
+	for _, item = range all {
+		if !item.nl.isUdp() {
+			ret = append(ret, item.nl.Tcp())
 		}
 	}
 
 	return
 }
 
-// ListenersSystemdWithNames Возвращает карту срезов net.Listener сокетов переданных в процесс сервера
-// из службы linux - systemd.
+// ListenersSystemdPacketWithoutNames Возвращает срез net.PacketConn пакетных сокетов (udp, unixgram),
+// переданных в процесс сервера из службы Linux - systemd.
+func (nut *impl) ListenersSystemdPacketWithoutNames() (ret []net.PacketConn, err error) {
+	var (
+		all  []listenSystemdItem
+		item listenSystemdItem
+	)
+
+	if all, err = nut.listenSystemdLoadAll(); err != nil {
+		return
+	}
+	ret = make([]net.PacketConn, 0, len(all))
+	for _, item = range all {
+		if item.nl.isUdp() {
+			ret = append(ret, item.nl.Udp())
+		}
+	}
+
+	return
+}
+
+// ListenersSystemdWithNames Возвращает карту срезов net.Listener сокетов, переданных в процесс сервера
+// из службы Linux - systemd.
 func (nut *impl) ListenersSystemdWithNames() (ret map[string][]net.Listener, err error) {
 	var (
-		file    *os.File
-		files   []*os.File
-		current []net.Listener
-		pc      net.Listener
-		ok      bool
+		all  []listenSystemdItem
+		item listenSystemdItem
 	)
 
-	files, err = nut.ListenLoadFilesFdWithNames()
+	if all, err = nut.listenSystemdLoadAll(); err != nil {
+		return
+	}
 	ret = make(map[string][]net.Listener)
-	for _, file = range files {
-		if pc, err = nut.fnFl(file); err == nil {
-			if current, ok = ret[file.Name()]; !ok {
-				ret[file.Name()] = make([]net.Listener, 0, 1)
-			}
-			ret[file.Name()] = append(current, pc)
-			_ = nut.fnFc(file)
+	for _, item = range all {
+		if item.nl.isUdp() {
+			continue
+		}
+		ret[item.name] = append(ret[item.name], item.nl.Tcp())
+	}
+
+	return
+}
+
+// ListenersSystemdPacketWithNames Возвращает карту срезов net.PacketConn пакетных сокетов (udp, unixgram),
+// переданных в процесс сервера из службы Linux - systemd.
+func (nut *impl) ListenersSystemdPacketWithNames() (ret map[string][]net.PacketConn, err error) {
+	var (
+		all  []listenSystemdItem
+		item listenSystemdItem
+	)
+
+	if all, err = nut.listenSystemdLoadAll(); err != nil {
+		return
+	}
+	ret = make(map[string][]net.PacketConn)
+	for _, item = range all {
+		if item.nl.isUdp() {
+			ret[item.name] = append(ret[item.name], item.nl.Udp())
 		}
 	}
 
 	return
 }
 
-// ListenersSystemdTLSWithoutNames Возвращает срез net.nnlistener для TLS сокетов переданных в процесс сервера
-// из службы linux - systemd.
+// listenSystemdLoadAll Загрузка всех файловых дескрипторов, переданных службой systemd, и преобразование
+// их в слушателей соединений. Каждый файловый дескриптор пробуется как потоковый (tcp, unix) через
+// net.FileListener, при ошибке дескриптор пробуется как пакетный (udp, unixgram) через net.FilePacketConn.
+func (nut *impl) listenSystemdLoadAll() (ret []listenSystemdItem, err error) {
+	var (
+		files []*os.File
+		file  *os.File
+		lst   net.Listener
+		pck   net.PacketConn
+	)
+
+	if files, err = nut.ListenLoadFilesFdWithNames(); err != nil {
+		return
+	}
+	ret = make([]listenSystemdItem, 0, len(files))
+	for _, file = range files {
+		if lst, err = nut.fnFl(file); err == nil {
+			ret = append(ret, listenSystemdItem{name: file.Name(), nl: netListenerTcp(lst)})
+			_ = nut.fnFc(file)
+			continue
+		}
+		if pck, err = nut.fnFpc(file); err == nil {
+			ret = append(ret, listenSystemdItem{name: file.Name(), nl: netListenerUdp(pck)})
+			_ = nut.fnFc(file)
+			continue
+		}
+	}
+	// Если ни один из переданных дескрипторов не был преобразован в слушателя.
+	if len(ret) == 0 {
+		err = Errors().ListenerIsNotCreated()
+	}
+
+	return
+}
+
+// ListenersSystemdTLSWithoutNames Возвращает срез net.Listener для TLS сокетов, переданных в процесс сервера
+// из службы Linux - systemd.
 func (nut *impl) ListenersSystemdTLSWithoutNames(tlsConfig *tls.Config) (ret []net.Listener, err error) {
 	var (
 		listeners []net.Listener
@@ -147,8 +220,8 @@ func (nut *impl) ListenersSystemdTLSWithoutNames(tlsConfig *tls.Config) (ret []n
 	return
 }
 
-// ListenersSystemdTLSWithNames Возвращает карту срезов net.nnlistener для TLS сокетов переданных в процесс сервера
-// из службы linux - systemd.
+// ListenersSystemdTLSWithNames Возвращает карту срезов net.Listener для TLS сокетов, переданных в процесс
+// сервера из службы Linux - systemd.
 func (nut *impl) ListenersSystemdTLSWithNames(tlsConfig *tls.Config) (ret map[string][]net.Listener, err error) {
 	var (
 		listeners map[string][]net.Listener
@@ -169,6 +242,7 @@ func (nut *impl) ListenersSystemdTLSWithNames(tlsConfig *tls.Config) (ret map[st
 			ll[n] = tls.NewListener(l, tlsConfig)
 		}
 	}
+	ret = listeners
 
 	return
 }

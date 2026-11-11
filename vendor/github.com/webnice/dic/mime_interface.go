@@ -25,10 +25,10 @@ type IMime interface {
 	// Mime Тип MIME с подтипом, но без опций.
 	Mime() string
 
-	// Opt Опция миме типа с указанным ключём.
+	// Opt Опция MIME типа с указанным ключом.
 	Opt(key string) string
 
-	// String Полностью весть MIME тип с подтипом и опциями.
+	// String Полностью весь MIME тип с подтипом и опциями.
 	String() string
 }
 

@@ -14,6 +14,7 @@ func New() Interface {
 		isRun:      new(atomic.Bool),
 		isShutdown: new(atomic.Bool),
 		fnFl:       net.FileListener,
+		fnFpc:      net.FilePacketConn,
 		fnNf:       os.NewFile,
 		fnFc:       fileClose,
 	}
@@ -26,7 +27,12 @@ func New() Interface {
 
 // ID Уникальный идентификатор сервера.
 // Если идентификатор не был указан в конфигурации, создаётся при запуске.
-func (nut *impl) ID() string { return nut.conf.ID }
+func (nut *impl) ID() string {
+	if nut.conf == nil {
+		return ""
+	}
+	return nut.conf.ID
+}
 
 // Handler Назначение основной функции TCP или сокет сервера. Функция должна назначаться до запуска сервера.
 func (nut *impl) Handler(fn HandlerFn) Interface { nut.handler = fn; return nut }
@@ -35,10 +41,24 @@ func (nut *impl) Handler(fn HandlerFn) Interface { nut.handler = fn; return nut 
 func (nut *impl) HandlerUdp(fn HandlerUdpFn) Interface { nut.handlerUdp = fn; return nut }
 
 // Clean Очистка последней ошибки.
-func (nut *impl) Clean() Interface { nut.err = nil; return nut }
+func (nut *impl) Clean() Interface { nut.setError(nil); return nut }
 
 // Error Последняя ошибка сервера.
-func (nut *impl) Error() error { return nut.err }
+func (nut *impl) Error() error { return nut.getError() }
+
+// Установка последней ошибки сервера.
+func (nut *impl) setError(err error) {
+	nut.errLck.Lock()
+	defer nut.errLck.Unlock()
+	nut.err = err
+}
+
+// Получение последней ошибки сервера.
+func (nut *impl) getError() error {
+	nut.errLck.Lock()
+	defer nut.errLck.Unlock()
+	return nut.err
+}
 
 // Errors Справочник ошибок.
 func (nut *impl) Errors() *Error { return errSingleton }
@@ -46,12 +66,16 @@ func (nut *impl) Errors() *Error { return errSingleton }
 // Wait Блокируемая функция ожидания завершения веб сервера, если он запущен.
 // Если сервер не запущен, функция завершается немедленно.
 func (nut *impl) Wait() Interface {
-	if !nut.isRun.Load() {
-		//nut.err = ErrNotRunning()
+	nut.lck.Lock()
+	ch, running := nut.onShutdown, nut.isRun.Load()
+	nut.lck.Unlock()
+	if !running {
 		return nut
 	}
-	safeWait(nut.onShutdown)
-	nut.onShutdown = nil
+	if ch != nil {
+		// Ожидание закрытия канала потоком сервера при его завершении.
+		<-ch
+	}
 
 	return nut
 }
@@ -67,10 +91,8 @@ func (nut *impl) Stop() Interface {
 	}
 	// Флаг начала завершения работы сервера.
 	nut.isShutdown.Store(true)
-	// Закрытие соединения.
-	nut.err = nut.listener.Close()
-	safeClose(nut.onShutdown)
-	nut.onShutdown = nil
+	// Закрытие соединения. Ожидание завершения работы сервера выполняется функцией Wait().
+	nut.setError(nut.listener.Close())
 
 	return nut
 }

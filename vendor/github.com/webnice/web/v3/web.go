@@ -9,6 +9,8 @@ import (
 )
 
 // New Конструктор объекта сущности пакета, возвращается интерфейс пакета.
+//
+//goland:noinspection GoUnusedExportedFunction
 func New() Interface {
 	var web = &impl{
 		net: wnet.New(),
@@ -73,12 +75,18 @@ func (web *impl) ServeTLSWithId(ltn net.Listener, tlsConfig *tls.Config, id stri
 		web.cfg, web.err = parseAddress(ltn.Addr().String())
 		defaultConfiguration(web.cfg)
 	}
-	web.cfg.ID, web.cfg.Configuration.ID = id, id
+	if id != "" {
+		web.cfg.ID = id
+	}
 	if web.server, isTls = web.makeServer(tlsConfig); web.Error() != nil {
 		return web
 	}
-	if listener = ltn; isTls {
-		listener = tls.NewListener(ltn, tlsConfig)
+	if listener = ltn; isTls && !isTLSListener(ltn) {
+		// Повторное оборачивание не требуется, если слушатель уже в режиме TLS, например, получен из
+		// ListenersSystemdTLSWithoutNames() или ListenersSystemdTLSWithNames().
+		// Конфигурация TLS берётся из объекта сервера, там находится переданная или созданная по умолчанию
+		// конфигурация.
+		listener = tls.NewListener(ltn, web.server.TLSConfig)
 	}
 	web.net.Handler(web.server.Serve)
 	web.net.ServeWithId(listener, web.cfg.ID)

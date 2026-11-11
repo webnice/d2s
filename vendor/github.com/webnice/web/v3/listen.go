@@ -80,13 +80,13 @@ func (web *impl) ListenersSystemdWithNames() (map[string][]net.Listener, error) 
 	return web.listenersSystemdWithNames()
 }
 
-// ListenersSystemdTLSWithoutNames Возвращает срез net.listener для TLS сокетов переданных в процесс веб сервера
+// ListenersSystemdTLSWithoutNames Возвращает срез net.Listener для TLS сокетов переданных в процесс веб сервера
 // из systemd.
 func (web *impl) ListenersSystemdTLSWithoutNames(tlsConfig *tls.Config) ([]net.Listener, error) {
 	return web.listenersSystemdTLSWithoutNames(tlsConfig)
 }
 
-// ListenersSystemdTLSWithNames Возвращает карту срезов net.listener для TLS сокетов переданных в процесс веб сервера
+// ListenersSystemdTLSWithNames Возвращает карту срезов net.Listener для TLS сокетов переданных в процесс веб сервера
 // из systemd.
 func (web *impl) ListenersSystemdTLSWithNames(tlsConfig *tls.Config) (map[string][]net.Listener, error) {
 	return web.listenersSystemdTLSWithNames(tlsConfig)
@@ -94,6 +94,10 @@ func (web *impl) ListenersSystemdTLSWithNames(tlsConfig *tls.Config) (map[string
 
 // NewListener Создание нового слушателя соединений net.Listener на основе конфигурации веб сервера.
 func (web *impl) NewListener(conf *Configuration) (ret net.Listener, err error) {
+	if conf == nil {
+		err = Errors().NoConfiguration()
+		return
+	}
 	if web.net.IsRunning() {
 		err = Errors().AlreadyRunning()
 		return
@@ -106,6 +110,10 @@ func (web *impl) NewListener(conf *Configuration) (ret net.Listener, err error) 
 // NewListenerTLS Создание нового слушателя соединений net.Listener в режиме TLS, на основе конфигурации
 // веб сервера.
 func (web *impl) NewListenerTLS(conf *Configuration, tlsConfig *tls.Config) (ret net.Listener, err error) {
+	if conf == nil {
+		err = Errors().NoConfiguration()
+		return
+	}
 	if web.net.IsRunning() {
 		err = Errors().AlreadyRunning()
 		return

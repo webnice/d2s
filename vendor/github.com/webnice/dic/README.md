@@ -64,8 +64,10 @@ func main() {
 	result = hcc.IsEqual(mch)
 	fmt.Printf("Является ли заголовок %q эквивалентным заголовку %q? Ответ: %t\n", hcc, mch, result)
 }
+```
 
 Результат:
+```text
 Является ли заголовок "My-Custom/Header-1" эквивалентным заголовку "Accept-Patch"? Ответ: false
 Является ли заголовок "Header-Second/Custom" эквивалентным заголовку "My-Custom/Header-1"? Ответ: false
 ```

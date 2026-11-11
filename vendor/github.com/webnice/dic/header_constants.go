@@ -17,7 +17,7 @@ type Headers struct {
 	AcceptEncoding IHeader
 	// AcceptLanguage Заголовок "Accept-Language", HTTP/1.0. Список поддерживаемых естественных языков.
 	AcceptLanguage IHeader
-	// AcceptPatch Заголовок "Accept-Patch", HTTP/1.1. Указывает MIME тип контента, который сервер может принять в запросе методом PATH. Пример: Accept-Patch: application/example, text/example;charset=utf-8.
+	// AcceptPatch Заголовок "Accept-Patch", HTTP/1.1. Указывает MIME тип контента, который сервер может принять в запросе методом PATCH. Пример: Accept-Patch: application/example, text/example;charset=utf-8.
 	AcceptPatch IHeader
 	// AcceptPost Заголовок "Accept-Post", HTTP/1.1. Указывает MIME тип контента, который сервер может принять в запросе методом POST. Пример: Accept-Post: image/webp.
 	AcceptPost IHeader
@@ -31,13 +31,13 @@ type Headers struct {
 	AccessControlAllowMethods IHeader
 	// AccessControlAllowOrigin Заголовок "Access-Control-Allow-Origin", HTTP/1.1. Указывает источники, которые могут выполнять запросы к серверу. Пример: Access-Control-Allow-Origin: https://developer.mozilla.org.
 	AccessControlAllowOrigin IHeader
-	// AccessControlExposeHeaders Заголовок "Access-Control-Expose-Headers", HTTP/1.1. Указывает браузеру, какие заголовки могут быть доступны JavaScript скриптам. Пример: Access-Control-Expose-Headers: Content-Encoding, Kuma-Revision.
+	// AccessControlExposeHeaders Заголовок "Access-Control-Expose-Headers", HTTP/1.1. Указывает браузеру, какие заголовки могут быть доступны JavaScript скриптам. Пример: Access-Control-Expose-Headers: Content-Encoding, WD-Revision.
 	AccessControlExposeHeaders IHeader
-	// AccessControlMaxAge Заголовок "Access-Control-Max-Age", HTTP/1.1. Указывает время (в секундах), в течении которого браузер может кешировать ответ сервера. Пример: Access-Control-Max-Age: 600.
+	// AccessControlMaxAge Заголовок "Access-Control-Max-Age", HTTP/1.1. Указывает время (в секундах), в течение которого браузер может кешировать ответ сервера. Пример: Access-Control-Max-Age: 600.
 	AccessControlMaxAge IHeader
-	// AccessControlRequestHeaders Заголовок "Access-Control-Request-Headers", HTTP/1.1. Заголовок используется браузерами чтобы выяснить какие заголовки принимает сервер от JavaScript скриптов. Пример: Access-Control-Request-Headers: X-PINGOTHER, Content-Type.
+	// AccessControlRequestHeaders Заголовок "Access-Control-Request-Headers", HTTP/1.1. Заголовок используется браузерами, чтобы выяснить, какие заголовки принимает сервер от JavaScript скриптов. Пример: Access-Control-Request-Headers: X-Requested-With, Content-Type.
 	AccessControlRequestHeaders IHeader
-	// AccessControlRequestMethod Заголовок "Access-Control-Request-Method", HTTP/1.1. Заголовок используется браузерами чтобы выяснить какие HTTP методы принимает сервер от JavaScript скриптов. Пример: Access-Control-Request-Method: POST.
+	// AccessControlRequestMethod Заголовок "Access-Control-Request-Method", HTTP/1.1. Заголовок используется браузерами, чтобы выяснить, какие HTTP методы принимает сервер от JavaScript скриптов. Пример: Access-Control-Request-Method: POST.
 	AccessControlRequestMethod IHeader
 	// Age Заголовок "Age", HTTP/1.1. Количество секунд с момента модификации ресурса.
 	Age IHeader
@@ -99,7 +99,7 @@ type Headers struct {
 	DeviceMemory IHeader
 	// ETag Заголовок "ETag", HTTP/1.1. Тег (уникальный идентификатор) версии сущности, используемый при кэшировании.
 	ETag IHeader
-	// Expect Заголовок "Expect", HTTP/1.1v2. Указывает серверу что клиент ожидает от него дополнительного действия.
+	// Expect Заголовок "Expect", HTTP/1.1v2. Указывает серверу, что клиент ожидает от него дополнительного действия.
 	Expect IHeader
 	// Expires Заголовок "Expires", HTTP/1.0. Дата предполагаемого истечения срока актуальности сущности.
 	Expires IHeader
@@ -123,12 +123,14 @@ type Headers struct {
 	IfUnmodifiedSince IHeader
 	// Importance Заголовок "Importance", RFC4021. Mail MIME.
 	Importance IHeader
-	// KeepAlive Заголовок "Keep-Alive", HTTP/1.1. Информирование о возможности установки длительного соединения, максимального количества запросов по нему и таймаута.
+	// KeepAlive Заголовок "Keep-Alive", HTTP/1.1. Информирование о возможности установки длительного соединения, максимального количества запросов по нему и тайм-аута.
 	KeepAlive IHeader
 	// LastModified Заголовок "Last-Modified", HTTP/1.0. Дата последней модификации сущности.
 	LastModified IHeader
 	// Link Заголовок "Link", HTTP/1.0. Указывает на логически связанный с сущностью ресурс аналогично тегу <LINK> в HTML.
 	Link IHeader
+	// ListUnsubscribe Заголовок "List-Unsubscribe", RFC2369, RFC8058. Адрес или способ отписки от почтовой рассылки. Пример: List-Unsubscribe: <https://example.com/unsub>.
+	ListUnsubscribe IHeader
 	// Location Заголовок "Location", HTTP/1.0. URI по которому клиенту следует перейти или URI созданного ресурса.
 	Location IHeader
 	// MaxForwards Заголовок "Max-Forwards", HTTP/1.1. Максимально допустимое количество переходов через прокси.
@@ -137,15 +139,15 @@ type Headers struct {
 	MessageId IHeader
 	// MimeVersion Заголовок "MIME-Version", MIME. Версия протокола MIME, по которому было сформировано сообщение.
 	MimeVersion IHeader
-	// MsEchoRequest Заголовок "Ms-Echo-Request", Заголовок перечисления необходимых полей, которыми необходимо дополнить и повторить запрос.
+	// MsEchoRequest Заголовок "Ms-Echo-Request", Заголовок перечисления полей, которыми необходимо дополнить запрос и повторить его.
 	MsEchoRequest IHeader
 	// Origin Заголовок "Origin", HTTP/1.0. Указывает источник, схема, хост, порт, вызвавшего запрос. Пример: Origin: http://developer.mozilla.org:80.
 	Origin IHeader
-	// PermissionsPolicy Заголовок "Permissions-Policy", HTTP/1.1. Указывает браузеры разрешение для ресурса на использование в iframe.
+	// PermissionsPolicy Заголовок "Permissions-Policy", HTTP/1.1. Указывает браузеру разрешение для ресурса на использование в iframe.
 	PermissionsPolicy IHeader
 	// Pragma Заголовок "Pragma", HTTP/1.0. Особенные опции выполнения операции.
 	Pragma IHeader
-	// Precedence Заголовок "Precedence", Mail MIME. Заголовок почтовых рассылок. Документация на mail.ru или mailchimp.
+	// Precedence Заголовок "Precedence", Mail MIME. Заголовок почтовых рассылок. Документация на mail.ru или Mailchimp.
 	Precedence IHeader
 	// Prefer Заголовок "Prefer", RFC7240. Запрос от клиента к серверу о выполнении определённых действий над передаваемыми данными запроса. Пример: Prefer: return=representation.
 	Prefer IHeader
@@ -159,16 +161,52 @@ type Headers struct {
 	Public IHeader
 	// Range Заголовок "Range", HTTP/1.1. Байтовые диапазоны для запроса фрагментов ресурса. Подробности: Частичные GET.
 	Range IHeader
-	// Received Заголовок "Received", Mail MIME. Заголовок добавляемый почтовым сервером, указывает испочник получения письма.
+	// RateLimitLimit Заголовок "RateLimit-Limit", IETF RateLimit. Емкость квоты запросов клиента. Пример: RateLimit-Limit: 100.
+	RateLimitLimit IHeader
+	// RateLimitRemaining Заголовок "RateLimit-Remaining", IETF RateLimit. Оставшееся количество запросов до исчерпания квоты. Пример: RateLimit-Remaining: 42.
+	RateLimitRemaining IHeader
+	// RateLimitReset Заголовок "RateLimit-Reset", IETF RateLimit. Время до сброса квоты запросов клиента. Пример: RateLimit-Reset: 30.
+	RateLimitReset IHeader
+	// Received Заголовок "Received", Mail MIME. Заголовок добавляемый почтовым сервером, указывает источник получения письма.
 	Received IHeader
 	// Referer Заголовок "Referer", HTTP/1.0. URI ресурса, после которого клиент сделал текущий запрос.
 	Referer IHeader
+	// ReferrerPolicy Заголовок "Referrer-Policy", HTTP/1.1. Управление объёмом сведений о referrer, передаваемых в заголовке Referer последующих запросов. Пример: Referrer-Policy: strict-origin-when-cross-origin.
+	ReferrerPolicy IHeader
 	// RetryAfter Заголовок "Retry-After", HTTP/1.0. Дата или время в секундах после которого можно повторить запрос.
 	RetryAfter IHeader
 	// ReturnPath Заголовок "Return-Path", Mail MIME. Адрес, на который необходимо вернуть письмо в случае ошибок доставки.
 	ReturnPath IHeader
+	// SecChUa Заголовок "Sec-CH-UA", Client Hints. Марка и значительная версия браузера пользователя. Пример: Sec-CH-UA: "Chromium";v="131".
+	SecChUa IHeader
+	// SecChUaFullVersionList Заголовок "Sec-CH-UA-Full-Version-List", Client Hints. Полный список версий браузера и его совместимых вариантов. Пример: Sec-CH-UA-Full-Version-List: "Chromium";v="131.0.0.0".
+	SecChUaFullVersionList IHeader
+	// SecChUaMobile Заголовок "Sec-CH-UA-Mobile", Client Hints. Признак мобильного устройства пользователя. Пример: Sec-CH-UA-Mobile: ?0.
+	SecChUaMobile IHeader
+	// SecChUaPlatform Заголовок "Sec-CH-UA-Platform", Client Hints. Платформа устройства пользователя. Пример: Sec-CH-UA-Platform: "macOS".
+	SecChUaPlatform IHeader
+	// SecFetchDest Заголовок "Sec-Fetch-Dest", Fetch Metadata. Назначение запроса. Пример: Sec-Fetch-Dest: document.
+	SecFetchDest IHeader
+	// SecFetchMode Заголовок "Sec-Fetch-Mode", Fetch Metadata. Режим запроса. Пример: Sec-Fetch-Mode: navigate.
+	SecFetchMode IHeader
+	// SecFetchSite Заголовок "Sec-Fetch-Site", Fetch Metadata. Отношение источника запроса к источнику ресурса. Пример: Sec-Fetch-Site: cross-site.
+	SecFetchSite IHeader
+	// SecFetchUser Заголовок "Sec-Fetch-User", Fetch Metadata. Инициирован ли запрос действиями пользователя. Пример: Sec-Fetch-User: ?1.
+	SecFetchUser IHeader
+	// SecWebSocketAccept Заголовок "Sec-WebSocket-Accept", RFC6455. Подтверждение ключа рукопожатия WebSocket от сервера.
+	SecWebSocketAccept IHeader
+	// SecWebSocketExtensions Заголовок "Sec-WebSocket-Extensions", RFC6455. Список расширений протокола WebSocket.
+	SecWebSocketExtensions IHeader
+	// SecWebSocketKey Заголовок "Sec-WebSocket-Key", RFC6455. Ключ рукопожатия WebSocket от клиента.
+	SecWebSocketKey IHeader
+	// SecWebSocketProtocol Заголовок "Sec-WebSocket-Protocol", RFC6455. Выбранный подпротокол WebSocket. Пример: Sec-WebSocket-Protocol: chat.
+	SecWebSocketProtocol IHeader
+	// SecWebSocketVersion Заголовок "Sec-WebSocket-Version", RFC6455. Версия протокола WebSocket. Пример: Sec-WebSocket-Version: 13.
+	SecWebSocketVersion IHeader
 	// Server Заголовок "Server", HTTP/1.0. Список названий и версий веб-сервера и его компонентов с комментариями. Для прокси-серверов поле Via.
 	Server IHeader
+	// ServerTiming Заголовок "Server-Timing", W3C. Метрики производительности сервера по запросу. Пример: Server-Timing: db;dur=53.
+	ServerTiming IHeader
 	// SetCookie Заголовок "Set-Cookie", HTTP/1.0. Заголовок установки печенек.
 	SetCookie IHeader
 	// SourceMap Заголовок "SourceMap", HTTP/1.1. Указывает браузеру местонахождение карты исходных кодов. Пример: SourceMap: /path/to/file.js.map.
@@ -179,6 +217,8 @@ type Headers struct {
 	StrictTransportSecurity IHeader
 	// Te Заголовок "TE", HTTP/1.1v2. Список расширенных способов кодирования при передаче. Пример: TE: trailers, deflate.
 	Te IHeader
+	// TimingAllowOrigin Заголовок "Timing-Allow-Origin", W3C. Разрешение чтения атрибутов времени загрузки ресурса из других источников. Пример: Timing-Allow-Origin: *.
+	TimingAllowOrigin IHeader
 	// Title Заголовок "Title", HTTP/1.0. Заголовок сущности.
 	Title IHeader
 	// Trailer Заголовок "Trailer", HTTP/1.1v2. Список полей, имеющих отношение к кодированию сообщения при передаче.
@@ -209,9 +249,11 @@ type Headers struct {
 	XConnectionType IHeader
 	// XContentDuration Заголовок "X-Content-Duration", Продолжительность аудио или видео в секундах.
 	XContentDuration IHeader
+	// XContentTypeOptions Заголовок "X-Content-Type-Options", HTTP/1.1. Запрет браузеру угадывания MIME типа контента по содержимому (MIME-sniffing). Пример: X-Content-Type-Options: nosniff.
+	XContentTypeOptions IHeader
 	// XCorrelationId Заголовок "X-Correlation-ID", Сопоставление или идентификация запросов между клиентом и сервером.
 	XCorrelationId IHeader
-	// XDayOfWeek Заголовок "X-Day-Of-Week", День недели, значения: [0,1,2,3,4,5,6] 0=пнд, -1=не известен.
+	// XDayOfWeek Заголовок "X-Day-Of-Week", День недели, значения: [0,1,2,3,4,5,6] 0=пн, -1=неизвестен.
 	XDayOfWeek IHeader
 	// XDeviceManufacturer Заголовок "X-Device-Manufacturer", Производитель или марка устройства.
 	XDeviceManufacturer IHeader
@@ -219,11 +261,15 @@ type Headers struct {
 	XDeviceModel IHeader
 	// XFailedRecipients Заголовок "X-Failed-Recipients", Mail MIME. Список адресов получателей, которым не удалось доставить сообщение.
 	XFailedRecipients IHeader
-	// XForwardedFor Заголовок "X-Forwarded-For", Nginx. Полученное nginx значение заголовка X-Forwarded-For. Если заголовок не передавался, тогда равно IP адресу клиента. Пример: X-Forwarded-For $proxy_add_x_forwarded_for.
+	// XForwardedFor Заголовок "X-Forwarded-For", Nginx. Полученное nginx значение заголовка X-Forwarded-For. Если заголовок не передавался, тогда равен IP-адресу клиента. Пример: X-Forwarded-For $proxy_add_x_forwarded_for.
 	XForwardedFor IHeader
+	// XForwardedHost Заголовок "X-Forwarded-Host", Nginx. Доменное имя и порт исходного запроса, полученного прокси. Пример: X-Forwarded-Host $host.
+	XForwardedHost IHeader
+	// XForwardedPort Заголовок "X-Forwarded-Port", Nginx. Порт исходного запроса, полученного прокси. Пример: X-Forwarded-Port $server_port.
+	XForwardedPort IHeader
 	// XForwardedProto Заголовок "X-Forwarded-Proto", Nginx. Схема. Значения: ["http", "https"]. Пример: X-Forwarded-Proto $scheme.
 	XForwardedProto IHeader
-	// XFrameOptions Заголовок "X-Frame-Options", HTTP/1.1. Указывает браузеры разрешение для ресурса на использование в iframe.
+	// XFrameOptions Заголовок "X-Frame-Options", HTTP/1.1. Указывает браузеру разрешение для ресурса на использование в iframe.
 	XFrameOptions IHeader
 	// XGeoCity Заголовок "X-Geo-City", Город.
 	XGeoCity IHeader
@@ -237,7 +283,7 @@ type Headers struct {
 	XInternetServiceProvider IHeader
 	// XMsMailPriority Заголовок "X-MSMail-Priority", Mail MIME. Приоритет письма.
 	XMsMailPriority IHeader
-	// XPoweredBy Заголовок "X-Powered-By", Указывает технологию, фреймворк или иное П.О. используемое сервером.
+	// XPoweredBy Заголовок "X-Powered-By", Указывает технологию, фреймворк или иное ПО, используемое сервером.
 	XPoweredBy IHeader
 	// XPriority Заголовок "X-Priority", Mail MIME. Приоритет письма.
 	XPriority IHeader
@@ -335,6 +381,7 @@ func init() {
 		KeepAlive:                       &tHeader{header: "Keep-Alive"},
 		LastModified:                    &tHeader{header: "Last-Modified"},
 		Link:                            &tHeader{header: "Link"},
+		ListUnsubscribe:                 &tHeader{header: "List-Unsubscribe"},
 		Location:                        &tHeader{header: "Location"},
 		MaxForwards:                     &tHeader{header: "Max-Forwards"},
 		MessageId:                       &tHeader{header: "Message-Id"},
@@ -350,16 +397,35 @@ func init() {
 		ProxyAuthorization:              &tHeader{header: "Proxy-Authorization"},
 		Public:                          &tHeader{header: "Public"},
 		Range:                           &tHeader{header: "Range"},
+		RateLimitLimit:                  &tHeader{header: "RateLimit-Limit"},
+		RateLimitRemaining:              &tHeader{header: "RateLimit-Remaining"},
+		RateLimitReset:                  &tHeader{header: "RateLimit-Reset"},
 		Received:                        &tHeader{header: "Received"},
 		Referer:                         &tHeader{header: "Referer"},
+		ReferrerPolicy:                  &tHeader{header: "Referrer-Policy"},
 		RetryAfter:                      &tHeader{header: "Retry-After"},
 		ReturnPath:                      &tHeader{header: "Return-Path"},
+		SecChUa:                         &tHeader{header: "Sec-CH-UA"},
+		SecChUaFullVersionList:          &tHeader{header: "Sec-CH-UA-Full-Version-List"},
+		SecChUaMobile:                   &tHeader{header: "Sec-CH-UA-Mobile"},
+		SecChUaPlatform:                 &tHeader{header: "Sec-CH-UA-Platform"},
+		SecFetchDest:                    &tHeader{header: "Sec-Fetch-Dest"},
+		SecFetchMode:                    &tHeader{header: "Sec-Fetch-Mode"},
+		SecFetchSite:                    &tHeader{header: "Sec-Fetch-Site"},
+		SecFetchUser:                    &tHeader{header: "Sec-Fetch-User"},
+		SecWebSocketAccept:              &tHeader{header: "Sec-WebSocket-Accept"},
+		SecWebSocketExtensions:          &tHeader{header: "Sec-WebSocket-Extensions"},
+		SecWebSocketKey:                 &tHeader{header: "Sec-WebSocket-Key"},
+		SecWebSocketProtocol:            &tHeader{header: "Sec-WebSocket-Protocol"},
+		SecWebSocketVersion:             &tHeader{header: "Sec-WebSocket-Version"},
 		Server:                          &tHeader{header: "Server"},
+		ServerTiming:                    &tHeader{header: "Server-Timing"},
 		SetCookie:                       &tHeader{header: "Set-Cookie"},
 		SourceMap:                       &tHeader{header: "SourceMap"},
 		Status:                          &tHeader{header: "Status"},
 		StrictTransportSecurity:         &tHeader{header: "Strict-Transport-Security"},
 		Te:                              &tHeader{header: "TE"},
+		TimingAllowOrigin:               &tHeader{header: "Timing-Allow-Origin"},
 		Title:                           &tHeader{header: "Title"},
 		Trailer:                         &tHeader{header: "Trailer"},
 		TransferEncoding:                &tHeader{header: "Transfer-Encoding"},
@@ -375,12 +441,15 @@ func init() {
 		XCarrier:                        &tHeader{header: "X-Carrier"},
 		XConnectionType:                 &tHeader{header: "X-Connection-Type"},
 		XContentDuration:                &tHeader{header: "X-Content-Duration"},
+		XContentTypeOptions:             &tHeader{header: "X-Content-Type-Options"},
 		XCorrelationId:                  &tHeader{header: "X-Correlation-ID"},
 		XDayOfWeek:                      &tHeader{header: "X-Day-Of-Week"},
 		XDeviceManufacturer:             &tHeader{header: "X-Device-Manufacturer"},
 		XDeviceModel:                    &tHeader{header: "X-Device-Model"},
 		XFailedRecipients:               &tHeader{header: "X-Failed-Recipients"},
 		XForwardedFor:                   &tHeader{header: "X-Forwarded-For"},
+		XForwardedHost:                  &tHeader{header: "X-Forwarded-Host"},
+		XForwardedPort:                  &tHeader{header: "X-Forwarded-Port"},
 		XForwardedProto:                 &tHeader{header: "X-Forwarded-Proto"},
 		XFrameOptions:                   &tHeader{header: "X-Frame-Options"},
 		XGeoCity:                        &tHeader{header: "X-Geo-City"},

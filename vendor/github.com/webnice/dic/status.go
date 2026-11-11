@@ -1,9 +1,6 @@
 package dic
 
-import (
-	"fmt"
-	"strings"
-)
+import "strings"
 
 // Генератор кода.
 //go:generate go run status_generate.go
@@ -27,11 +24,11 @@ func (sso *tStatus) IsEqual(s IStatus) (ret bool) {
 	return
 }
 
-// IsEqualCode Истина, если коды статусо HTTP ответов эквивалентны.
+// IsEqualCode Истина, если коды статусов HTTP ответов эквивалентны.
 func (sso *tStatus) IsEqualCode(c int) bool { return sso.code == c }
 
 // String Интерфейс Stringify. Статус HTTP ответа в виде строки.
-func (sso *tStatus) String() string { return fmt.Sprintf("%s", sso.status) }
+func (sso *tStatus) String() string { return sso.status }
 
 // Bytes Статус HTTP ответа в виде среза байт.
 func (sso *tStatus) Bytes() []byte { return []byte(sso.String()) }

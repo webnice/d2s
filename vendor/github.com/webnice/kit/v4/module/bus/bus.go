@@ -39,6 +39,7 @@ func New(bufferLength int, workerCount int, isDebug bool) Interface {
 		Bus:         make(chan kitModulePdw.Data, bufferLength),
 	}
 	bus.databus = data
+	//goland:noinspection GoDetectSetFinalizerUsages
 	runtime.SetFinalizer(bus, destructorBus)
 	bus.essence = newEssence(bus).WorkerStart(workerCount)
 

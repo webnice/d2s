@@ -39,11 +39,11 @@ type Interface interface {
 	// из systemd.
 	ListenersSystemdWithNames() (ret map[string][]net.Listener, err error)
 
-	// ListenersSystemdTLSWithoutNames Возвращает срез net.listener для TLS сокетов переданных в процесс веб сервера
+	// ListenersSystemdTLSWithoutNames Возвращает срез net.Listener для TLS сокетов переданных в процесс веб сервера
 	// из systemd.
 	ListenersSystemdTLSWithoutNames(tlsConfig *tls.Config) (ret []net.Listener, err error)
 
-	// ListenersSystemdTLSWithNames Возвращает карту срезов net.listener для TLS сокетов переданных в процесс веб сервера
+	// ListenersSystemdTLSWithNames Возвращает карту срезов net.Listener для TLS сокетов переданных в процесс веб сервера
 	// из systemd.
 	ListenersSystemdTLSWithNames(tlsConfig *tls.Config) (ret map[string][]net.Listener, err error)
 

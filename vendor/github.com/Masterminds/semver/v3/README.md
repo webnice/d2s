@@ -11,6 +11,7 @@ The `semver` package provides the ability to work with [Semantic Versions](http:
 Active](https://masterminds.github.io/stability/active.svg)](https://masterminds.github.io/stability/active.html)
 [![](https://github.com/Masterminds/semver/workflows/Tests/badge.svg)](https://github.com/Masterminds/semver/actions)
 [![GoDoc](https://img.shields.io/static/v1?label=godoc&message=reference&color=blue)](https://pkg.go.dev/github.com/Masterminds/semver/v3)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Masterminds/semver)](https://goreportcard.com/report/github.com/Masterminds/semver)
 
 ## Package Versions
 

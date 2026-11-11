@@ -62,7 +62,7 @@ func (eso *tError) TArg() []string { return eso.templateArgs }
 // Anchor Якорь ошибки, он же шаблон ошибки или ошибка целиком, если аргументов нет.
 func (eso *tError) Anchor() error { return eso.anchor }
 
-// Error Реализация интерфейса errors.Error().
+// Error Реализация интерфейса error.
 func (eso *tError) Error() string { return eso.String() }
 
 // String Представление ошибки в качестве строки, используется якорь и аргументы ошибки.

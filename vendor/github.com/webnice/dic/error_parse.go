@@ -28,6 +28,7 @@ func (errs *Errors) ParseError(e error, db ...any) (ret IError) {
 		bind *tError
 		rv   reflect.Value
 		n, d int
+		ok   bool
 	)
 
 	// Список поиска.
@@ -52,7 +53,9 @@ func (errs *Errors) ParseError(e error, db ...any) (ret IError) {
 			if !rv.Field(n).CanInterface() {
 				continue
 			}
-			errors.As(rv.Field(n).Interface().(*tError), &bind)
+			if bind, ok = rv.Field(n).Interface().(*tError); !ok || bind == nil || bind.anchor == nil {
+				continue
+			}
 			if errors.Is(bind.anchor, e) || strings.EqualFold(bind.anchor.Error(), e.Error()) {
 				break
 			}

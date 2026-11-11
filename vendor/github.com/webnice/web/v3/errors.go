@@ -8,19 +8,19 @@ const (
 )
 
 // Константы указываются в объектах в качестве фиксированного адреса на протяжении всего времени работы приложения.
-// Ошибка с ошибкой могут сравниваться по содержимому, по адресу и т.д.
+// Ошибки могут сравниваться по содержимому, по указателю и т.д.
 var (
 	errSingleton       = &Error{}
 	errHandlerIsNotSet = err(cHandlerIsNotSet)
 )
 
 type (
-	// Error object of package
+	// Error Объект справочника ошибок пакета.
 	Error struct{}
 	err   string
 )
 
-// Error The error built-in interface implementation
+// Error Реализация встроенного интерфейса error.
 func (e err) Error() string { return string(e) }
 
 // Errors Справочник ошибок.

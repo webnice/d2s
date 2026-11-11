@@ -1,9 +1,9 @@
 package dic
 
-// Объект-одиночка справочника статусов HTTP ответов.
+// Объект-одиночка справочника ошибок.
 var singletonErrors Errors
 
-// IError Интерфейс статусов HTTP ответов.
+// IError Интерфейс ошибок.
 type IError interface {
 
 	// CodeU64 Код ошибки с типом uint64.
@@ -45,7 +45,7 @@ type IError interface {
 	// Anchor Якорь ошибки, он же шаблон ошибки или ошибка целиком, если аргументов нет.
 	Anchor() error
 
-	// Error Реализация интерфейса errors.Error().
+	// Error Реализация интерфейса error.
 	Error() string
 
 	// String Представление ошибки в качестве строки, используется якорь и аргументы ошибки.

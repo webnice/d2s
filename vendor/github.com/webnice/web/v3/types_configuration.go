@@ -18,29 +18,29 @@ type Configuration struct {
 	Domain []string `yaml:"Domain" json:"domain"`
 
 	// ReadTimeout Время ожидания запроса включая ReadHeaderTimeout.
-	// Если не указано или рано 0 - таймаута нет.
+	// Если не указано или равно 0 - тайм-аута нет.
 	// Default value: 0 - no timeout
 	ReadTimeout time.Duration `yaml:"ReadTimeout" json:"read_timeout"`
 
 	// ReadHeaderTimeout Время ожидания заголовка запроса.
-	// Если не указано или рано 0 - таймаута нет.
+	// Если не указано или равно 0 - тайм-аута нет.
 	// Default value: 0 - no timeout
 	ReadHeaderTimeout time.Duration `yaml:"ReadHeaderTimeout" json:"read_header_timeout"`
 
 	// WriteTimeout Время ожидания выдачи ответа.
-	// Если не указано или рано 0 - таймаута нет.
+	// Если не указано или равно 0 - тайм-аута нет.
 	// Default value: 0 - no timeout
 	WriteTimeout time.Duration `yaml:"WriteTimeout" json:"write_timeout"`
 
 	// IdleTimeout Максимальное время ожидания следующего входящего соединения для открытого сокета, до его закрытия.
 	// Используется при включённом keep-alives.
-	// Если не указано или рано 0 - таймаута нет
+	// Если не указано или равно 0 - тайм-аута нет
 	// Default value: 0 - no timeout
 	IdleTimeout time.Duration `yaml:"IdleTimeout" json:"idle_timeout"`
 
 	// ShutdownTimeout Максимальное время ожидания завершения работы веб сервера до начала принудительного обрыва
 	// соединений и остановки процессов.
-	// Если не указано или рано 0 - таймаута нет.
+	// Если не указано или равно 0 - тайм-аута нет.
 	// Default value: 30s
 	ShutdownTimeout time.Duration `yaml:"ShutdownTimeout" json:"shutdown_timeout" default-value:"30s"`
 
@@ -48,8 +48,9 @@ type Configuration struct {
 	// Default value: 1 MB (from net/http/DefaultMaxHeaderBytes)
 	MaxHeaderBytes int `yaml:"MaxHeaderBytes" json:"max_header_bytes" default-value:"1048576"`
 
-	// TODO Сделать ограничение на максимальный размер тела запроса.
-	// MaxBodyBytes Максимальный размер тела запроса.
+	// MaxBodyBytes Максимальный размер тела запроса в байтах.
+	// Если не указано или равно 0 - размер тела запроса не ограничен.
+	// При превышении размера сервер отвечает ошибкой 413 Request Entity Too Large.
 	// Default value: 0 - unlimited
 	MaxBodyBytes uint64 `yaml:"MaxBodyBytes" json:"max_body_bytes"`
 
@@ -57,12 +58,28 @@ type Configuration struct {
 	// Default value: false - keep alive are enabled.
 	KeepAliveDisable bool `yaml:"KeepAliveDisable" json:"keep_alive_disable"`
 
-	// DisableGeneralOptionsHandler Отключение обработки HTTP запросов методом OPTION.
-	// Если установлено значение "истина", на все запросы методом OPTION сервер отвечает кодом 200 и передаёт в
+	// DisableGeneralOptionsHandler Отключение обработки HTTP запросов методом OPTIONS.
+	// Если установлено значение "истина", на все запросы методом OPTIONS сервер отвечает кодом 200 и передаёт в
 	// заголовке Content-Length значение 0.
 	// Если установлено значение "ложь", запросы передаются контроллеру и обрабатываются обычным образом.
 	// Default value: false - запросы передаются контроллеру.
 	DisableGeneralOptionsHandler bool `yaml:"DisableGeneralOptionsHandler" json:"disable_general_options_handler"`
+
+	// HTTP2Disable Отключение протокола HTTP/2 для TLS соединений.
+	// Если установлено значение "ложь", при TLS подключении сервер согласует протокол HTTP/2 по умолчанию,
+	// как это делает "net/http".
+	// Default value: false - HTTP/2 включён.
+	HTTP2Disable bool `yaml:"HTTP2Disable" json:"http2_disable"`
+
+	// HTTP2UnencryptedEnable Включение протокола HTTP/2 без шифрования (h2c, prior knowledge).
+	// Протокол применяется только для не зашифрованных соединений.
+	// Default value: false - h2c отключён.
+	HTTP2UnencryptedEnable bool `yaml:"HTTP2UnencryptedEnable" json:"http2_unencrypted_enable"`
+
+	// HTTP2MaxConcurrentStreams Максимальное количество одновременных потоков в одном HTTP/2 соединении.
+	// Если не указано или равно 0 - используется значение по умолчанию.
+	// Default value: 0 - значение по умолчанию
+	HTTP2MaxConcurrentStreams int `yaml:"HTTP2MaxConcurrentStreams" json:"http2_max_concurrent_streams"`
 }
 
 /**
@@ -109,7 +126,7 @@ type Configuration struct {
             ##           игнорируются, используется только путь к сокету;
             ## systemd - Порт или сокет открывает systemd и передаёт слушателя порта через файловый дескриптор сервису,
             ##           запущенному от пользователя без права открытия привилегированных портов. Максимально удобный
-            ##           способ при использовании правильного безопасно настроенного linux сервера.
+            ##           способ при использовании правильного безопасно настроенного Linux сервера.
             ##           Более подробно можно посмотреть в документации man systemd.socket(5);
             ## Default value: "tcp"
             Mode: !!str "tcp"
@@ -147,29 +164,29 @@ type Configuration struct {
       - !!str "example.domain.tld"
 
       ## Время ожидания запроса включая ReadHeaderTimeout.
-      ## Если не указано или рано 0 - таймаута нет.
+      ## Если не указано или равно 0 - тайм-аута нет.
       ## Default value: 0 - no timeout
       ReadTimeout: 0s
 
       ## Время ожидания заголовка запроса.
-      ## Если не указано или рано 0 - таймаута нет.
+      ## Если не указано или равно 0 - тайм-аута нет.
       ## Default value: 0 - no timeout
       ReadHeaderTimeout: 0s
 
       ## Время ожидания выдачи ответа.
-      ## Если не указано или рано 0 - таймаута нет.
+      ## Если не указано или равно 0 - тайм-аута нет.
       ## Default value: 0 - no timeout
       WriteTimeout: 0s
 
       ## Максимальное время ожидания следующего входящего соединения для открытого сокета, до его закрытия.
       ## Используется при включённом keep-alives.
-      ## Если не указано или рано 0 - таймаута нет
+      ## Если не указано или равно 0 - тайм-аута нет
       ## Default value: 0 - no timeout
       IdleTimeout: 0s
 
       ## Максимальное время ожидания завершения работы веб сервера до начала принудительного обрыва
       ## соединений и остановки процессов.
-      ## Если не указано или рано 0 - таймаута нет.
+      ## Если не указано или равно 0 - тайм-аута нет.
       ## Default value: 30s
       ShutdownTimeout: 30s
 
@@ -177,7 +194,9 @@ type Configuration struct {
       ## Default value: 1 MB (from net/http/DefaultMaxHeaderBytes)
       MaxHeaderBytes: !!int 1048576
 
-      ## Максимальный размер тела запроса.
+      ## Максимальный размер тела запроса в байтах.
+      ## Если не указано или равно 0 - размер тела запроса не ограничен.
+      ## При превышении размера сервер отвечает ошибкой 413 Request Entity Too Large.
       ## Default value: 0 - без ограничений.
       MaxBodyBytes: !!int 0
 
@@ -185,12 +204,26 @@ type Configuration struct {
       ## Default value: false - оставаться в живых включён.
       KeepAliveDisable: !!bool false
 
-      ## Отключение обработки HTTP запросов методом OPTION.
-      ## Если установлено значение "истина", на все запросы методом OPTION сервер отвечает кодом 200 и передаёт в
+      ## Отключение обработки HTTP запросов методом OPTIONS.
+      ## Если установлено значение "истина", на все запросы методом OPTIONS сервер отвечает кодом 200 и передаёт в
       ## заголовке Content-Length значение 0.
       ## Если установлено значение "ложь", запросы передаются контроллеру и обрабатываются обычным образом.
       ## Default value: false - запросы передаются контроллеру.
       DisableGeneralOptionsHandler: !!bool false
+
+      ## Отключение протокола HTTP/2 для TLS соединений.
+      ## Default value: false - HTTP/2 включён.
+      HTTP2Disable: !!bool false
+
+      ## Включение протокола HTTP/2 без шифрования (h2c, prior knowledge).
+      ## Протокол применяется только для не зашифрованных соединений.
+      ## Default value: false - h2c отключён.
+      HTTP2UnencryptedEnable: !!bool false
+
+      ## Максимальное количество одновременных потоков в одном HTTP/2 соединении.
+      ## Если не указано или равно 0 - используется значение по умолчанию.
+      ## Default value: 0 - значение по умолчанию
+      HTTP2MaxConcurrentStreams: !!int 0
 
 
 **/

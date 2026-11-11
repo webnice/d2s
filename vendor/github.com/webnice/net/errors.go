@@ -4,13 +4,14 @@ package net
 const (
 	cAlreadyRunning                = "Сервер уже запущен."
 	cNoConfiguration               = "Конфигурация сервера отсутствует либо равна nil."
-	cListenSystemdPID              = "Переменная окружения LISTEN_PID пустая, либо содержит не верное значение."
-	cListenSystemdFDS              = "Переменная окружения LISTEN_FDS пустая, либо содержит не верное значение."
+	cListenSystemdPID              = "Переменная окружения LISTEN_PID пустая, либо содержит неверное значение."
+	cListenSystemdFDS              = "Переменная окружения LISTEN_FDS пустая, либо содержит неверное значение."
 	cListenSystemdNotFound         = "Получение сокета systemd по имени, имя не найдено."
 	cListenSystemdQuantityNotMatch = "Полученное количество LISTEN_FDS не соответствует переданному LISTEN_FDNAMES."
 	cTLSIsNil                      = "Конфигурация TLS сервера пустая."
 	cServerHandlerIsNotSet         = "Не установлен обработчик основной функции TCP сервера."
 	cServerHandlerUdpIsNotSet      = "Не установлен обработчик основной функции UDP сервера."
+	cListenerIsNotCreated          = "Слушатель соединений не создан."
 )
 
 // Константы указываются в объектах в качестве фиксированного адреса на протяжении всего времени работы приложения.
@@ -26,6 +27,7 @@ var (
 	errTLSIsNil                      = err(cTLSIsNil)
 	errServerHandlerIsNotSet         = err(cServerHandlerIsNotSet)
 	errServerHandlerUdpIsNotSet      = err(cServerHandlerUdpIsNotSet)
+	errListenerIsNotCreated          = err(cListenerIsNotCreated)
 )
 
 type (
@@ -48,10 +50,10 @@ func (e *Error) AlreadyRunning() error { return &errAlreadyRunning }
 // NoConfiguration Конфигурация сервера отсутствует либо равна nil.
 func (e *Error) NoConfiguration() error { return &errNoConfiguration }
 
-// ListenSystemdPID Переменная окружения LISTEN_PID пустая, либо содержит не верное значение.
+// ListenSystemdPID Переменная окружения LISTEN_PID пустая, либо содержит неверное значение.
 func (e *Error) ListenSystemdPID() error { return &errListenSystemdPID }
 
-// ListenSystemdFDS Переменная окружения LISTEN_FDS пустая, либо содержит не верное значение.
+// ListenSystemdFDS Переменная окружения LISTEN_FDS пустая, либо содержит неверное значение.
 func (e *Error) ListenSystemdFDS() error { return &errListenSystemdFDS }
 
 // ListenSystemdNotFound Получение сокета systemd по имени, имя не найдено.
@@ -68,3 +70,6 @@ func (e *Error) ServerHandlerIsNotSet() error { return &errServerHandlerIsNotSet
 
 // ServerHandlerUdpIsNotSet Не установлен обработчик основной функции UDP сервера.
 func (e *Error) ServerHandlerUdpIsNotSet() error { return &errServerHandlerUdpIsNotSet }
+
+// ListenerIsNotCreated Слушатель соединений не создан.
+func (e *Error) ListenerIsNotCreated() error { return &errListenerIsNotCreated }

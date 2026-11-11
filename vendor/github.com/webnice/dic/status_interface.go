@@ -8,13 +8,13 @@ type IStatus interface {
 	// IsEqual Истина, если статусы HTTP ответов эквивалентны.
 	IsEqual(m IStatus) bool
 
-	// IsEqualCode Истина, если коды статусо HTTP ответов эквивалентны.
+	// IsEqualCode Истина, если коды статусов HTTP ответов эквивалентны.
 	IsEqualCode(c int) bool
 
 	// Code Числовой код статуса HTTP ответа.
 	Code() int
 
-	// String Полностью весть MIME тип с подтипом и опциями.
+	// String Статус HTTP ответа в виде строки.
 	String() string
 
 	// Bytes Статус HTTP ответа в виде среза байт.
@@ -23,6 +23,6 @@ type IStatus interface {
 
 // Структура объекта статуса HTTP ответа.
 type tStatus struct {
-	status string // Эльфийское название статуса.
+	status string // Английское название статуса.
 	code   int    // Числовой код статуса.
 }

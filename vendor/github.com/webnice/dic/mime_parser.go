@@ -47,13 +47,11 @@ func NewMime(main, sub string, opts map[string]string) IMime {
 		subt: sub,
 		opts: make(map[string]string),
 	}
-	if opts != nil {
-		for key = range opts {
-			if key == "" || opts[key] == "" {
-				continue
-			}
-			mto.opts[key] = opts[key]
+	for key = range opts {
+		if key == "" || opts[key] == "" {
+			continue
 		}
+		mto.opts[key] = opts[key]
 	}
 
 	return mto

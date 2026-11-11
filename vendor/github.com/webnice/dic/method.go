@@ -18,9 +18,7 @@ func (mdo *tMethod) IsEqualFull(m IMethod) (ret bool) {
 	if m == nil {
 		return false
 	}
-	if ret = mdo.IsEqual(m); ret && mdo.bits == m.(*tMethod).bits {
-		ret = true
-	}
+	ret = mdo.IsEqual(m) && mdo.bits == m.(*tMethod).bits
 
 	return
 }

@@ -31,7 +31,7 @@ func (mto *tMime) Mime() string {
 	}
 }
 
-// Opt Опция миме типа с указанным ключём.
+// Opt Опция MIME типа с указанным ключом.
 func (mto *tMime) Opt(key string) (ret string) {
 	if _, ok := mto.opts[key]; !ok {
 		return
@@ -41,7 +41,7 @@ func (mto *tMime) Opt(key string) (ret string) {
 	return
 }
 
-// String Полностью весть MIME тип с подтипом и опциями.
+// String Полностью весь MIME тип с подтипом и опциями.
 func (mto *tMime) String() (ret string) {
 	const tpl = "%s; %s=%s"
 	var (
