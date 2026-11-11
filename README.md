@@ -1,6 +1,7 @@
 # d2s
 
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/webnice/d2s/v2.svg)](https://pkg.go.dev/github.com/webnice/d2s/v2)
+[![Coverage Status](https://coveralls.io/repos/github/webnice/d2s/badge.svg)](https://coveralls.io/github/webnice/d2s)
 
 Генератор Golang структур по структуре таблиц базы данных
 
