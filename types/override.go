@@ -7,14 +7,14 @@ import (
 	"strings"
 )
 
-// OverrideType Пара типов golang для переопределения: not null и nullable варианты.
+// OverrideType Пара типов Golang для переопределения: not null и nullable варианты.
 type OverrideType struct {
-	NotNull  string // Тип golang для not null колонки.
-	Nullable string // Тип golang для nullable колонки.
+	NotNull  string // Тип Golang для not null колонки.
+	Nullable string // Тип Golang для nullable колонки.
 }
 
 // overrideTypes Реестр допустимых типов переопределения.
-// Ключи в нижнем регистре, значение — каноническое имя и пара типов golang.
+// Ключи в нижнем регистре, значение — каноническое имя и пара типов Golang.
 // Для базовых типов nullable вариант — соответствующая обёртка nix/v2.
 // Для явных типов nix — тип используется как есть для обоих вариантов.
 var overrideTypes = map[string]struct {
@@ -93,7 +93,7 @@ func CanonicalOverrideType(name string) (canonical string, ok bool) {
 	return
 }
 
-// OverrideGoType Тип golang для канонического имени переопределения.
+// OverrideGoType Тип Golang для канонического имени переопределения.
 func OverrideGoType(canonical string, nullable bool) (ret string) {
 	var (
 		entry struct {

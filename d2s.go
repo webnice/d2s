@@ -7,8 +7,8 @@ import (
 	"os"
 	"strings"
 
-	d2sTypes "github.com/webnice/d2s/types"
 	"github.com/webnice/d2s/v2/mysql"
+	d2sTypes "github.com/webnice/d2s/v2/types"
 )
 
 // New Создание нового объекта и возврат интерфейса.
@@ -22,7 +22,7 @@ func (d2s *impl) Debug(d bool) Interface { d2s.debug = d; return d2s }
 
 // Types Переопределение типов полей структуры.
 // Список "поле1:тип;поле2:тип", где поле — имя колонки базы данных (без учёта
-// регистра), тип — стандартный тип golang или тип nix/v2. Переопределение
+// регистра), тип — стандартный тип Golang или тип nix/v2. Переопределение
 // имеет наивысший приоритет над переопределением из комментария колонки
 // и базовым сопоставлением типов.
 func (d2s *impl) Types(overrideList string) (err error) {

@@ -9,7 +9,7 @@ import (
 	d2sTypes "github.com/webnice/d2s/v2/types"
 )
 
-// Generator Создание контента golang файла на основе загруженных данных таблицы.
+// Generator Создание контента Golang файла на основе загруженных данных таблицы.
 func (d2s *impl) Generator(inf *d2sTypes.TableInfo) (ret *bytes.Buffer, err error) {
 	const (
 		prefixTime    = "time."
@@ -72,7 +72,7 @@ func (d2s *impl) Generator(inf *d2sTypes.TableInfo) (ret *bytes.Buffer, err erro
 	return
 }
 
-// importBlock Формирование блока импортов сгенерированного golang файла.
+// importBlock Формирование блока импортов сгенерированного Golang файла.
 func (d2s *impl) importBlock(importJSON, importTime, importNix bool) (ret string) {
 	var std, ext []string
 

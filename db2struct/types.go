@@ -11,7 +11,7 @@ type Args struct {
 	Table     string             // Имя таблицы.
 	Package   string             // Имя пакета.
 	Structure string             // Имя структуры.
-	File      string             // Имя файла для создания структуры golang.
+	File      string             // Имя файла для создания структуры Golang.
 	Types     string             // Переопределение типов данных полей структуры.
 	Create    *kingpin.CmdClause // Команда создания структуры по таблице базы данных.
 }

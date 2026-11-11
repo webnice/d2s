@@ -4,7 +4,7 @@ import "github.com/alecthomas/kingpin/v2"
 
 func args() (cmd string, args *Args) {
 	args = new(Args)
-	kingpin.CommandLine.Help = `Утилита создаёт golang структуру по информации о таблице базы данных`
+	kingpin.CommandLine.Help = `Утилита создаёт Golang структуру по информации о таблице базы данных`
 
 	// Глобальные флаги.
 	kingpin.Flag(`debug`, `Включение режима отладки.
@@ -41,7 +41,7 @@ func args() (cmd string, args *Args) {
 		StringVar(&args.File)
 	args.Create.Arg(`types`, `Переопределение типов данных полей структуры.
 Формат: "поле1:тип;поле2:тип", где поле — имя колонки базы данных,
-тип — стандартный тип данных golang или тип данных библиотеки github.com/webnice/nix/v2.
+тип — стандартный тип данных Golang или тип данных библиотеки github.com/webnice/nix/v2.
 Переопределяет значение по умолчанию, только если поле базы данных указано и совпадает.`).
 		StringVar(&args.Types)
 	cmd = kingpin.Parse()

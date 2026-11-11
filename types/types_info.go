@@ -24,5 +24,5 @@ type ColumnInfo struct {
 	IsUnsigned      bool       // [COLUMN_TYPE] ............... true - Колонка UNSIGNED.
 	IsPrimary       bool       // [COLUMN_KEY] ................ Колонка является первичным ключём.
 	IsAutoIncrement bool       // [EXTRA] ..................... Если колонка имеет атрибут auto_increment.
-	TypeGolang      *Base      // ............................. Тип данных golang.
+	TypeGolang      *Base      // ............................. Тип данных Golang.
 }

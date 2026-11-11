@@ -156,7 +156,7 @@ func (msl *impl) tableColumns(db *sql.DB, inf *d2sTypes.TableInfo) (err error) {
 			err = fmt.Errorf("ошибка сканирования: %s", err)
 			return
 		}
-		// Конвертация типа в тип golang.
+		// Конвертация типа в тип Golang.
 		msl.columnTypeMapping(row)
 		inf.Columns = append(inf.Columns, row)
 	}
@@ -175,7 +175,7 @@ func (msl *impl) tableColumnsFullTypeParse(col *d2sTypes.ColumnInfo) {
 	col.TypeFull = strings.ToUpper(col.TypeFull)
 }
 
-// Сопоставление типов данных в БД с типом данных в golang.
+// Сопоставление типов данных в БД с типом данных в Golang.
 func (msl *impl) columnTypeMapping(col *d2sTypes.ColumnInfo) {
 	switch strings.ToLower(col.TypeSimple) {
 	case dbBoolean, dbBool, dbTinyint:
