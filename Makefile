@@ -22,7 +22,7 @@ dep:
 .PHONY: dep
 
 build:
-	@go build -o bin/db2struct github.com/webnice/d2s/db2struct
+	@go build -o bin/db2struct github.com/webnice/d2s/v2/db2struct
 .PHONY: build
 
 test:

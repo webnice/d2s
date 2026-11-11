@@ -115,8 +115,8 @@ func (c1 Color) DistanceLinearRGB(c2 Color) float64 {
 //
 // Sources:
 //
-//	https://www.compuphase.com/cmetric.htm
-//	https://github.com/lucasb-eyer/go-colorful/issues/52
+//     https://www.compuphase.com/cmetric.htm
+//     https://github.com/lucasb-eyer/go-colorful/issues/52
 func (c1 Color) DistanceRiemersma(c2 Color) float64 {
 	rAvg := (c1.R + c2.R) / 2.0
 	// Deltas

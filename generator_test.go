@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	d2sTypes "github.com/webnice/d2s/types"
+	d2sTypes "github.com/webnice/d2s/v2/types"
 )
 
 func strp(s string) *string { return &s }

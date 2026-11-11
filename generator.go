@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	d2sTypes "github.com/webnice/d2s/types"
+	d2sTypes "github.com/webnice/d2s/v2/types"
 )
 
 // Generator Создание контента golang файла на основе загруженных данных таблицы.

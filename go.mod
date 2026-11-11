@@ -1,10 +1,11 @@
-module github.com/webnice/d2s
+module github.com/webnice/d2s/v2
 
 go 1.26.9
 
 require (
 	github.com/alecthomas/kingpin/v2 v2.4.0
 	github.com/go-sql-driver/mysql v1.10.1
+	github.com/webnice/d2s v1.0.5
 	github.com/webnice/kit/v4 v4.7.9
 )
 
@@ -25,7 +26,7 @@ require (
 	github.com/webnice/net v1.4.1 // indirect
 	github.com/webnice/web/v3 v3.2.1 // indirect
 	github.com/xhit/go-str2duration/v2 v2.2.0 // indirect
-	golang.org/x/crypto v0.58.0 // indirect
+	golang.org/x/crypto v0.59.0 // indirect
 	golang.org/x/sys v0.50.0 // indirect
 	golang.org/x/text v0.44.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

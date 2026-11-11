@@ -3,7 +3,7 @@ package d2s
 import (
 	"database/sql"
 
-	d2sTypes "github.com/webnice/d2s/types"
+	d2sTypes "github.com/webnice/d2s/v2/types"
 )
 
 // Interface Интерфейс пакета.

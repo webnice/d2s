@@ -7,8 +7,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/webnice/d2s/mysql"
 	d2sTypes "github.com/webnice/d2s/types"
+	"github.com/webnice/d2s/v2/mysql"
 )
 
 // New Создание нового объекта и возврат интерфейса.

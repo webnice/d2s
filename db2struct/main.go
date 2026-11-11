@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/webnice/d2s"
-	d2sTypes "github.com/webnice/d2s/types"
+	"github.com/webnice/d2s/v2"
+	d2sTypes "github.com/webnice/d2s/v2/types"
 	kitModuleCfg "github.com/webnice/kit/v4/module/cfg"
 	kitTypes "github.com/webnice/kit/v4/types"
 

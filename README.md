@@ -1,6 +1,6 @@
 # d2s
 
-[![PkgGoDev](https://pkg.go.dev/badge/github.com/webnice/d2s.svg)](https://pkg.go.dev/github.com/webnice/d2s)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/webnice/d2s/v2.svg)](https://pkg.go.dev/github.com/webnice/d2s/v2)
 
 Генератор golang структур по структуре таблиц базы данных
 
@@ -45,13 +45,13 @@
 Утилита `db2struct`:
 
 ```bash
-go install github.com/webnice/d2s/db2struct@latest
+go install github.com/webnice/d2s/v2/db2struct@latest
 ```
 
 Подключение как библиотеки:
 
 ```bash
-go get -u github.com/webnice/d2s
+go get -u github.com/webnice/d2s/v2
 ```
 
 #### Зависимости

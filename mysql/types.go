@@ -1,6 +1,6 @@
 package mysql
 
-import d2sTypes "github.com/webnice/d2s/types"
+import d2sTypes "github.com/webnice/d2s/v2/types"
 
 // Interface Интерфейс пакета.
 type Interface d2sTypes.Dialect
