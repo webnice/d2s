@@ -40,8 +40,8 @@ github.com/stretchr/testify v1.8.0/go.mod h1:yNjHg4UonilssWZ8iaSj1OCr/vHnekPRkoO
 github.com/stretchr/testify v1.8.4/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXlSw2iwfAo=
 github.com/stretchr/testify v1.9.0 h1:HtqpIVDClZ4nwg75+f6Lvsy/wHu+3BoSGCbBAcpTsTg=
 github.com/stretchr/testify v1.9.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
-github.com/webnice/debug v1.1.1 h1:QRKa9Gf6PBW+ziwu80biL6Ka6GlpbX4Z5CGhWJgehgI=
-github.com/webnice/debug v1.1.1/go.mod h1:2wWU1R1cHQTT/hEjO8xM/pIhASzqsH7JAiNtbsAtqIQ=
+github.com/webnice/debug v1.2.0 h1:0FILpmeyl8y40LqB5dhfSClZEDmxkL9SqjddKUXGsf0=
+github.com/webnice/debug v1.2.0/go.mod h1:hK6LL+hOiFBsV6nlQsazUpLXxqT9jfnl+0KuPiq+oHk=
 github.com/webnice/dic v1.4.0 h1:QykGh77eGLS1rKniZ2F+HFRMGtw0Dfdi4s7j1smCtLw=
 github.com/webnice/dic v1.4.0/go.mod h1:1eM1bn5o2yKM5hlpGZ+LJDHihK1Iuk/VSvcAq0dHQk0=
 github.com/webnice/kit/v4 v4.7.9 h1:ytQncAjGRqtBAGA3sxU8ZcsmznpELCyE6Fo+qIjh/X4=

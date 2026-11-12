@@ -20,7 +20,7 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/leodido/go-urn v1.5.0 // indirect
 	github.com/pires/go-proxyproto v0.16.0 // indirect
-	github.com/webnice/debug v1.1.1 // indirect
+	github.com/webnice/debug v1.2.0 // indirect
 	github.com/webnice/dic v1.4.0 // indirect
 	github.com/webnice/net v1.4.1 // indirect
 	github.com/webnice/web/v3 v3.2.1 // indirect
